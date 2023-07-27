@@ -1,0 +1,2 @@
+- name: some task
+  meta: noop

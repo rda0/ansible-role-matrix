@@ -1,0 +1,9 @@
+- name: tags-block
+  tags: matrix
+  when: role_matrix
+  block:
+
+    - name: import tasks from synapse.yml
+      import_tasks: synapse.yml
+      tags: matrix_synapse
+      when: import_matrix_synapse
