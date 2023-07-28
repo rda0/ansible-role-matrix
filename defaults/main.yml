@@ -1,2 +1,12 @@
 role_matrix: True
+import_matrix_dependencies: True
+import_matrix_users: True
 import_matrix_synapse: True
+
+matrix_venv_python_virtualenv: env
+matrix_venv_python_requirements: requirements.txt
+matrix_venv_python_freeze: freeze.txt
+matrix_venv_python_system_pkgs: False
+matrix_venv_python_reinit: False
+
+matrix_system_users: {}

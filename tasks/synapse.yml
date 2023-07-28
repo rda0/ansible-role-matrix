@@ -1,2 +1,26 @@
-- name: some task
-  meta: noop
+- name: install synapse dependencies
+  package:
+    name:
+      - libpq5
+      - libpq-dev
+      - redis-server
+      - redis-tools
+      - build-essential
+      - python3-dev
+      - libffi-dev
+      - libssl-dev
+      - libjpeg-dev
+      - libxslt1-dev
+      - libicu-dev
+      - libxml2-dev
+
+- name: create venv
+  include_tasks:
+    file: venv_python.yml
+  vars:
+    base_path: /opt/synapse
+    packages:
+      - matrix-synapse
+      - matrix-synapse-ldap3
+      - matrix-synapse[postgres]
+      - matrix-synapse[redis]

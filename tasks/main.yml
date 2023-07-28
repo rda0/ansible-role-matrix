@@ -3,6 +3,16 @@
   when: role_matrix
   block:
 
+    - name: import tasks from dependencies.yml
+      import_tasks: dependencies.yml
+      tags: matrix_dependencies
+      when: import_matrix_dependencies
+
+    - name: import tasks from users.yml
+      import_tasks: users.yml
+      tags: matrix_users
+      when: import_matrix_users
+
     - name: import tasks from synapse.yml
       import_tasks: synapse.yml
       tags: matrix_synapse

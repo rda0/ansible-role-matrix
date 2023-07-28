@@ -1,0 +1,17 @@
+- name: create system users
+  user:
+    name: '{{ item.name }}'
+    home: '{{ item.home }}'
+    shell: "{{ item.shell | default('/usr/sbin/nologin') }}"
+    system: True
+    create_home: False
+  loop: '{{ matrix_system_users }}'
+
+- name: create home directories
+  file:
+    path: '{{ item.home }}'
+    state: directory
+    owner: '{{ item.name }}'
+    group: '{{ item.name }}'
+    mode: "{{ item.mode | default('0755') }}"
+  loop: '{{ matrix_system_users }}'
