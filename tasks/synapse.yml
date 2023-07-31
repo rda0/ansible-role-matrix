@@ -13,6 +13,7 @@
       - libxslt1-dev
       - libicu-dev
       - libxml2-dev
+      - libjemalloc2
 
 - name: create venv
   include_tasks:
@@ -24,3 +25,29 @@
       - matrix-synapse-ldap3
       - matrix-synapse[postgres]
       - matrix-synapse[redis]
+      - lxml
+      - netaddr
+
+- name: create directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /etc/opt/synapse
+    - /var/opt/synapse
+    - /var/log/synapse
+
+- name: create logrotate cronjob
+  template:
+    src: synapse/logrotate.j2
+    dest: /etc/cron.daily/synapse-logs
+    owner: root
+    group: root
+    mode: '0755'
+
+# TODO: create database
+
+

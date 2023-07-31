@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# compress logs with date extension
+find /var/log/synapse -type f -regextype posix-extended -regex ".*\.log\.[0-9-]{10}" -exec gzip {} \;
+# delete old logs
+find /var/log/synapse -type f -mtime +7 -name "*.log.*.gz" -delete

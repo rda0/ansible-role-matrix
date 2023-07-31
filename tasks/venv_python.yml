@@ -53,7 +53,7 @@
     ignore_errors: True
 
 # TODO: Bug: always changed in check mode: https://github.com/ansible/ansible/issues/62826
-- name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} install packages'
+- name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} install packages (bug: always changed in check mode)'
   pip:
     name: '{{ packages | default([]) }}'
     virtualenv: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
