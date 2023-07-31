@@ -1,0 +1,15 @@
+skip_list:
+  - 'role-name'  # allow role names with dash or starting with underscore
+  - 'command-instead-of-module'  # rsync used in place of synchronize module
+  - 'command-instead-of-shell'  # Use shell only when shell functionality is required
+  - 'risky-shell-pipe'  # Shells that use pipes should set the pipefail option
+  - 'git-latest'  # Git checkouts must contain explicit version
+  - 'no-handler'  # Tasks that run when changed should likely be handlers
+  - 'deprecated-local-action'  # Do not use 'local_action', use 'delegate_to: localhost'
+  - 'empty-string-compare'  # Don't compare to empty string
+  - 'meta-no-info'  # No 'galaxy_info' found
+  - 'fqcn-builtins'  # Don't force usage of ansible.builtin prefix
+  - 'name[casing]'  # Don't force task names to start with capital letter
+  - 'name[template]'  # Don't force task names to only have jinja at the end
+  - 'template-instead-of-copy'  # Allow using copy with jinja content
+  - 'no-changed-when'  # Allow commands without explicit changed_when
