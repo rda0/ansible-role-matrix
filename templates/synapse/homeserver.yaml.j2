@@ -1,0 +1,226 @@
+{% if instance.modules %}
+modules:
+  {{ instance.modules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+server_name: "{{ instance.server_name }}"
+public_baseurl: {{ instance.public_baseurl }}
+{% if not instance.presence %}
+presence:
+  enabled: false
+{% endif %}
+{% if instance.allow_public_rooms_over_federation %}
+allow_public_rooms_over_federation: true
+{% endif %}
+listeners:
+  - port: {{ instance.listeners.main }}
+    bind_addresses: ['::1', '127.0.0.1']
+    tls: false
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client, federation]
+        compress: false
+{% if instance.listeners.metrics %}
+  - port: {{ instance.listeners.metrics }}
+    bind_addresses: ['0.0.0.0']
+    type: metrics
+{% endif %}
+{% if instance.listeners.replication %}
+  - port: {{ instance.listeners.replication }}
+    bind_addresses: ['127.0.0.1']
+    type: http
+    resources:
+     - names: [replication]
+{% endif %}
+admin_contact: 'mailto:{{ matrix_admin_email }}'
+federation_client_minimum_tls_version: {{ instance.federation_client_minimum_tls_version }}
+{% if instance.event_cache_size != '10K' %}
+event_cache_size: {{ instance.event_cache_size }}
+{% endif %}
+{% if instance.caches %}
+caches:
+  {{ instance.caches | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+database:
+  name: {{ instance.database.name }}
+  args:
+{% if instance.database.name == 'sqlite3' %}
+    database: /var/opt/synapse/{{ instance.name }}/homeserver.db
+{% endif %}
+{% if instance.database.name == 'psycopg2' %}
+    user: synapse-{{ instance.name }}
+    database: synapse_{{ instance.name }}
+{%   if instance.database.args.password %}
+    password: {{ instance.database.args.password }}
+{%   endif %}
+{%   if instance.database.args.host %}
+    host: {{ instance.database.args.host }}
+{%   endif %}
+    cp_min: {{ instance.database.args.cp_min }}
+    cp_max: {{ instance.database.args.cp_max }}
+{% endif %}
+log_config: "/etc/opt/synapse/{{ instance.server_name }}.log.config"
+{% if instance.rc_joins %}
+rc_joins:
+  {{ instance.rc_joins | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+{% if not instance.enable_media_repo %}
+enable_media_repo: false
+{% endif %}
+media_store_path: "/var/opt/synapse/{{ instance.name }}/media_store"
+{% if instance.turn_server %}
+turn_uris: [
+    "turns:{{ instance.turn_server }}:3478?transport=udp",
+    "turn:{{ instance.turn_server }}:3478?transport=udp",
+    "turns:{{ instance.turn_server }}:3478?transport=tcp",
+    "turn:{{ instance.turn_server }}:3478?transport=tcp"
+]
+turn_shared_secret: "{{ instance.turn_shared_secret }}"
+{%   if instance.turn_user_lifetime != '1h' %}
+turn_user_lifetime: {{ instance.turn_user_lifetime }}
+{%   endif %}
+{%   if not instance.turn_allow_guests %}
+turn_allow_guests: false
+{%   endif %}
+{% endif %}
+registration_shared_secret: "{{ instance.registration_shared_secret }}"
+{% if instance.allow_guest_access %}
+allow_guest_access: true
+{% endif %}
+{% if instance.default_identity_server %}
+default_identity_server: {{ instance.default_identity_server }}
+{% endif %}
+{% if instance.auto_join_rooms %}
+auto_join_rooms:
+  {{ instance.auto_join_rooms | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+{% if instance.auto_join_mxid_localpart %}
+auto_join_mxid_localpart: {{ instance.auto_join_mxid_localpart }}
+{% endif %}
+{% if instance.enable_metrics %}
+enable_metrics: true
+{% endif %}
+{% if instance.mau_stats_only %}
+mau_stats_only: true
+{% endif %}
+{% if instance.limit_remote_rooms %}
+limit_remote_rooms:
+  {{ instance.limit_remote_rooms | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+report_stats: {{ instance.report_stats | to_yaml | trim }}
+{% if instance.report_stats_endpoint %}
+report_stats_endpoint: {{ instance.report_stats_endpoint }}
+{% endif %}
+{% if instance.app_service_config_files %}
+app_service_config_files:
+  {{ instance.app_service_config_files | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+macaroon_secret_key: "{{ instance.macaroon_secret_key }}"
+form_secret: "{{ instance.form_secret }}"
+signing_key_path: "/etc/opt/synapse/{{ instance.server_name }}.signing.key"
+{% if instance.trusted_key_servers %}
+trusted_key_servers:
+  {{ instance.trusted_key_servers | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% else %}
+trusted_key_servers: []
+{% endif %}
+{% if instance.suppress_key_server_warning %}
+suppress_key_server_warning: true
+{% endif %}
+{% if instance.email %}
+email:
+  smtp_host: localhost
+  smtp_port: 25
+  require_transport_security: false
+  notif_from: "{{ instance.email.notif_from }}"
+  app_name: "{{ instance.email.app_name }}"
+  enable_notifs: true
+  notif_for_new_users: false
+  client_base_url: "{{ matrix_client_base_url }}"
+  invite_client_location: "{{ matrix_client_base_url }}"
+{% endif %}
+{% if instance.password_providers %}
+password_providers:
+  {{ instance.password_providers | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+{% if instance.user_directory %}
+user_directory:
+  {{ instance.user_directory | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+{% if not instance.stats %}
+stats:
+  enabled: false
+{% endif %}
+{% if instance.server_notices %}
+server_notices:
+  {{ instance.server_notices | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+{% if instance.alias_creation_rules %}
+alias_creation_rules:
+  {{ instance.alias_creation_rules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+{% endif %}
+start_pushers: false
+send_federation: false
+federation_sender_instances:
+  - federation_sender01
+  - federation_sender02
+  - federation_sender03
+instance_map:
+  main:
+    host: 127.0.0.1
+    port: 9093
+  generic01:
+    host: 127.0.0.1
+    port: 9301
+  generic02:
+    host: 127.0.0.1
+    port: 9302
+  generic03:
+    host: 127.0.0.1
+    port: 9303
+  generic04:
+    host: 127.0.0.1
+    port: 9304
+  generic05:
+    host: 127.0.0.1
+    port: 9305
+  generic06:
+    host: 127.0.0.1
+    port: 9306
+  generic07:
+    host: 127.0.0.1
+    port: 9307
+  generic08:
+    host: 127.0.0.1
+    port: 9308
+  stream01:
+    host: 127.0.0.1
+    port: 9371
+  presence01:
+    host: 127.0.0.1
+    port: 9372
+stream_writers:
+  events:
+    - generic01
+    - generic02
+    - generic03
+    - generic04
+    - generic05
+    - generic06
+    - generic07
+    - generic08
+  typing:
+    - stream01
+  to_device:
+    - stream01
+  account_data:
+    - stream01
+  receipts:
+    - stream01
+  presence:
+    - presence01
+pusher_instances:
+  - pusher01
+redis:
+  enabled: true
+update_user_directory_from_worker: generic05

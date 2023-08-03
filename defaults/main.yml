@@ -9,4 +9,57 @@ matrix_venv_python_freeze: freeze.txt
 matrix_venv_python_system_pkgs: False
 matrix_venv_python_reinit: False
 
+matrix_admin_email: ''
+matrix_client_base_url: ''
 matrix_system_users: {}
+
+matrix_synapse_trusted_key_servers_default: []
+matrix_synapse_instances: []
+
+# private set_fact variable defaults (do not use in inventory)
+_matrix_synapse_instances: []
+_matrix_synapse_instances_defaults:
+  modules: []
+  presence: True
+  allow_public_rooms_over_federation: False
+  listeners:
+    main: 8008
+    metrics: ''
+    replication: ''
+  federation_client_minimum_tls_version: 1.2
+  event_cache_size: 10K
+  caches: {}
+  database:
+    name: sqlite3
+    args:
+      password: ''  # leave empty to use socket
+      host: ''      # leave empty to use socket
+      cp_min: 5
+      cp_max: 10
+  rc_joins: {}
+  enable_media_repo: True
+  turn_server: ''
+  turn_shared_secret: ''
+  turn_user_lifetime: 1h
+  turn_allow_guests: True
+  registration_shared_secret: ''
+  allow_guest_access: False
+  default_identity_server: ''
+  auto_join_rooms: []
+  auto_join_mxid_localpart: ''
+  enable_metrics: False
+  mau_stats_only: False
+  limit_remote_rooms: {}
+  report_stats: False
+  report_stats_endpoint: ''
+  app_service_config_files: []
+  macaroon_secret_key: ''
+  form_secret: ''
+  trusted_key_servers: '{{ matrix_synapse_trusted_key_servers_default }}'
+  suppress_key_server_warning: False
+  email: {}
+  password_providers: []
+  user_directory: {}
+  stats: True  # needed for room directory
+  server_notices: {}
+  alias_creation_rules: []

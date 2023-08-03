@@ -1,0 +1,17 @@
+# TODO: create database
+
+- name: create log directory
+  file:
+    path: '/var/log/synapse/{{ instance.name }}'
+    state: directory
+    owner: root
+    group: 'synapse-{{ instance.name }}'
+    mode: '0770'
+
+- name: create main homeserver config
+  template:
+    src: synapse/homeserver.yaml.j2
+    dest: /etc/opt/synapse/{{ instance.server_name }}.homeserver.yaml
+    owner: root
+    group: 'synapse-{{ instance.name }}'
+    mode: '0640'
