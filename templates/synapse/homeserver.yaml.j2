@@ -159,68 +159,39 @@ server_notices:
 alias_creation_rules:
   {{ instance.alias_creation_rules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
 {% endif %}
+{% if 'pusher' in instance.workers | map(attribute='app') | list %}
 start_pushers: false
+{% endif %}
+{% if 'federation_sender' in instance.workers | map(attribute='app') | list %}
 send_federation: false
 federation_sender_instances:
-  - federation_sender01
-  - federation_sender02
-  - federation_sender03
+{%   for worker in instance.workers | selectattr('app', 'equalto', 'federation_sender') | map(attribute='name') | list %}
+  - {{ worker }}
+{%   endfor %}
+{% endif %}
+{% if instance.workers | map(attribute='listeners') | map(attribute='replication') | list | length > 0 %}
 instance_map:
   main:
     host: 127.0.0.1
-    port: 9093
-  generic01:
+    port: {{ instance.listeners.replication }}
+{%   for worker in instance.workers | selectattr('listeners', 'contains', 'replication') | list %}
+  {{ worker.name }}:
     host: 127.0.0.1
-    port: 9301
-  generic02:
-    host: 127.0.0.1
-    port: 9302
-  generic03:
-    host: 127.0.0.1
-    port: 9303
-  generic04:
-    host: 127.0.0.1
-    port: 9304
-  generic05:
-    host: 127.0.0.1
-    port: 9305
-  generic06:
-    host: 127.0.0.1
-    port: 9306
-  generic07:
-    host: 127.0.0.1
-    port: 9307
-  generic08:
-    host: 127.0.0.1
-    port: 9308
-  stream01:
-    host: 127.0.0.1
-    port: 9371
-  presence01:
-    host: 127.0.0.1
-    port: 9372
+    port: {{ worker.listeners.replication }}
+{%   endfor %}
+{% endif %}
+{% if instance.stream_writers %}
 stream_writers:
-  events:
-    - generic01
-    - generic02
-    - generic03
-    - generic04
-    - generic05
-    - generic06
-    - generic07
-    - generic08
-  typing:
-    - stream01
-  to_device:
-    - stream01
-  account_data:
-    - stream01
-  receipts:
-    - stream01
-  presence:
-    - presence01
+  {{ instance.stream_writers | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+{% endif %}
+{% if instance.pusher_instances %}
 pusher_instances:
-  - pusher01
+  {{ instance.pusher_instances | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+{% endif %}
+{% if instance.workers %}
 redis:
   enabled: true
-update_user_directory_from_worker: generic05
+{% endif %}
+{% if instance.update_user_directory_from_worker %}
+update_user_directory_from_worker: {{ instance.update_user_directory_from_worker }}
+{% endif %}

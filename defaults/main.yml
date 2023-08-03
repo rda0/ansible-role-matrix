@@ -63,3 +63,7 @@ _matrix_synapse_instances_defaults:
   stats: True  # needed for room directory
   server_notices: {}
   alias_creation_rules: []
+  workers: []
+  stream_writers: {}
+  pusher_instances: []
+  update_user_directory_from_worker: ''
