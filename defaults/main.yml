@@ -67,3 +67,4 @@ _matrix_synapse_instances_defaults:
   stream_writers: {}
   pusher_instances: []
   update_user_directory_from_worker: ''
+  worker_replication_secret: ''
