@@ -15,3 +15,26 @@
     owner: root
     group: 'synapse-{{ instance.name }}'
     mode: '0640'
+
+- name: create main homeserver log config
+  template:
+    src: synapse/log.config.j2
+    dest: /etc/opt/synapse/{{ instance.server_name }}.log.config
+    owner: root
+    group: 'synapse-{{ instance.name }}'
+    mode: '0640'
+  vars:
+    worker:
+      name: homeserver
+
+- name: create worker log configs
+  template:
+    src: synapse/log.config.j2
+    dest: /etc/opt/synapse/{{ instance.server_name }}.log.worker.{{ worker.name }}.config
+    owner: root
+    group: 'synapse-{{ instance.name }}'
+    mode: '0640'
+  loop: "{{ instance.workers }}"
+  loop_control:
+    loop_var: worker
+    label: "{{ worker.name }}"

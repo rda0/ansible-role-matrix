@@ -21,6 +21,7 @@ vault_matrix_synapse_instances: {}
 # private set_fact variable defaults (do not use in inventory)
 _matrix_synapse_instances: []
 _matrix_synapse_instances_defaults:
+  log_level: INFO
   modules: []
   public_baseurl: ''
   presence: True
