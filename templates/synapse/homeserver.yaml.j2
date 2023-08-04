@@ -1,6 +1,6 @@
 {% if instance.modules %}
 modules:
-  {{ instance.modules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.modules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 server_name: "{{ instance.server_name }}"
 public_baseurl: {{ instance.public_baseurl }}
@@ -43,7 +43,7 @@ event_cache_size: {{ instance.event_cache_size }}
 {% endif %}
 {% if instance.caches %}
 caches:
-  {{ instance.caches | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.caches | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 database:
   name: {{ instance.database.name }}
@@ -66,7 +66,7 @@ database:
 log_config: "/etc/opt/synapse/{{ instance.server_name }}.log.config"
 {% if instance.rc_joins %}
 rc_joins:
-  {{ instance.rc_joins | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.rc_joins | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 {% if not instance.enable_media_repo %}
 enable_media_repo: false
@@ -96,7 +96,7 @@ default_identity_server: {{ instance.default_identity_server }}
 {% endif %}
 {% if instance.auto_join_rooms %}
 auto_join_rooms:
-  {{ instance.auto_join_rooms | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.auto_join_rooms | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 {% if instance.auto_join_mxid_localpart %}
 auto_join_mxid_localpart: {{ instance.auto_join_mxid_localpart }}
@@ -109,7 +109,7 @@ mau_stats_only: true
 {% endif %}
 {% if instance.limit_remote_rooms %}
 limit_remote_rooms:
-  {{ instance.limit_remote_rooms | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.limit_remote_rooms | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 report_stats: {{ instance.report_stats | to_yaml | trim }}
 {% if instance.report_stats_endpoint %}
@@ -117,14 +117,14 @@ report_stats_endpoint: {{ instance.report_stats_endpoint }}
 {% endif %}
 {% if instance.app_service_config_files %}
 app_service_config_files:
-  {{ instance.app_service_config_files | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.app_service_config_files | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 macaroon_secret_key: "{{ instance.macaroon_secret_key }}"
 form_secret: "{{ instance.form_secret }}"
 signing_key_path: "/etc/opt/synapse/{{ instance.server_name }}.signing.key"
 {% if instance.trusted_key_servers %}
 trusted_key_servers:
-  {{ instance.trusted_key_servers | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.trusted_key_servers | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% else %}
 trusted_key_servers: []
 {% endif %}
@@ -145,11 +145,11 @@ email:
 {% endif %}
 {% if instance.password_providers %}
 password_providers:
-  {{ instance.password_providers | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.password_providers | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 {% if instance.user_directory %}
 user_directory:
-  {{ instance.user_directory | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.user_directory | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 {% if not instance.stats %}
 stats:
@@ -157,11 +157,11 @@ stats:
 {% endif %}
 {% if instance.server_notices %}
 server_notices:
-  {{ instance.server_notices | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.server_notices | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 {% if instance.alias_creation_rules %}
 alias_creation_rules:
-  {{ instance.alias_creation_rules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim  }}
+  {{ instance.alias_creation_rules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 {% if 'pusher' in instance.workers | map(attribute='app') | list %}
 start_pushers: false
