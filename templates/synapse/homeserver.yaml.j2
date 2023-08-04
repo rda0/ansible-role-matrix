@@ -163,6 +163,10 @@ server_notices:
 alias_creation_rules:
   {{ instance.alias_creation_rules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
+{% if instance.room_list_publication_rules %}
+room_list_publication_rules:
+  {{ instance.room_list_publication_rules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+{% endif %}
 {% if 'pusher' in instance.workers | map(attribute='app') | list %}
 start_pushers: false
 {% endif %}
