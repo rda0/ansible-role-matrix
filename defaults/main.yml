@@ -14,6 +14,7 @@ matrix_client_base_url: ''
 matrix_system_users: {}
 
 matrix_synapse_trusted_key_servers_default: []
+matrix_synapse_federation_domain_whitelist_default: []
 matrix_synapse_instances: []
 
 # private set_fact variable defaults (do not use in inventory)
@@ -27,6 +28,7 @@ _matrix_synapse_instances_defaults:
     metrics: ''
     replication: ''
   federation_client_minimum_tls_version: 1.2
+  federation_domain_whitelist: '{{ matrix_synapse_federation_domain_whitelist_default }}'
   event_cache_size: 10K
   caches: {}
   database:

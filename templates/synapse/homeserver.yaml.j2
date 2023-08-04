@@ -34,6 +34,10 @@ listeners:
 {% endif %}
 admin_contact: 'mailto:{{ matrix_admin_email }}'
 federation_client_minimum_tls_version: {{ instance.federation_client_minimum_tls_version }}
+{% if instance.federation_domain_whitelist %}
+federation_domain_whitelist:
+  {{ instance.federation_domain_whitelist | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+{% endif %}
 {% if instance.event_cache_size != '10K' %}
 event_cache_size: {{ instance.event_cache_size }}
 {% endif %}
