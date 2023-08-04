@@ -3,7 +3,9 @@ modules:
   {{ instance.modules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 server_name: "{{ instance.server_name }}"
+{% if instance.public_baseurl %}
 public_baseurl: {{ instance.public_baseurl }}
+{% endif %}
 {% if not instance.presence %}
 presence:
   enabled: false
@@ -87,7 +89,7 @@ turn_user_lifetime: {{ instance.turn_user_lifetime }}
 turn_allow_guests: false
 {%   endif %}
 {% endif %}
-registration_shared_secret: "{{ instance.registration_shared_secret }}"
+registration_shared_secret: "{{ instance.registration_shared_secret | default(vault_matrix_synapse_instances[instance.name].registration_shared_secret) }}"
 {% if instance.allow_guest_access %}
 allow_guest_access: true
 {% endif %}
@@ -119,8 +121,8 @@ report_stats_endpoint: {{ instance.report_stats_endpoint }}
 app_service_config_files:
   {{ instance.app_service_config_files | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
-macaroon_secret_key: "{{ instance.macaroon_secret_key }}"
-form_secret: "{{ instance.form_secret }}"
+macaroon_secret_key: "{{ instance.macaroon_secret_key | default(vault_matrix_synapse_instances[instance.name].macaroon_secret_key) }}"
+form_secret: "{{ instance.form_secret | default(vault_matrix_synapse_instances[instance.name].form_secret) }}"
 signing_key_path: "/etc/opt/synapse/{{ instance.server_name }}.signing.key"
 {% if instance.trusted_key_servers %}
 trusted_key_servers:

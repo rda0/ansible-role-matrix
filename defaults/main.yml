@@ -16,11 +16,13 @@ matrix_system_users: {}
 matrix_synapse_trusted_key_servers_default: []
 matrix_synapse_federation_domain_whitelist_default: []
 matrix_synapse_instances: []
+vault_matrix_synapse_instances: {}
 
 # private set_fact variable defaults (do not use in inventory)
 _matrix_synapse_instances: []
 _matrix_synapse_instances_defaults:
   modules: []
+  public_baseurl: ''
   presence: True
   allow_public_rooms_over_federation: False
   listeners:
@@ -44,7 +46,7 @@ _matrix_synapse_instances_defaults:
   turn_shared_secret: ''
   turn_user_lifetime: 1h
   turn_allow_guests: True
-  registration_shared_secret: ''
+  #registration_shared_secret: ''  #required, default: loaded from vault_matrix_synapse_instances
   allow_guest_access: False
   default_identity_server: ''
   auto_join_rooms: []
@@ -55,8 +57,8 @@ _matrix_synapse_instances_defaults:
   report_stats: False
   report_stats_endpoint: ''
   app_service_config_files: []
-  macaroon_secret_key: ''
-  form_secret: ''
+  #macaroon_secret_key: ''  #required, default: loaded from vault_matrix_synapse_instances
+  #form_secret: ''  #required, default: loaded from vault_matrix_synapse_instances
   trusted_key_servers: '{{ matrix_synapse_trusted_key_servers_default }}'
   suppress_key_server_warning: False
   email: {}
