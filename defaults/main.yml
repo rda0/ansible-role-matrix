@@ -24,6 +24,8 @@ _matrix_synapse_instances_defaults:
   log_level: INFO
   modules: []
   public_baseurl: ''
+  enabled: True
+  jemalloc: False
   presence: True
   allow_public_rooms_over_federation: False
   listeners:

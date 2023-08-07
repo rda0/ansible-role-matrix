@@ -1,0 +1,33 @@
+[Unit]
+Description=Synapse {{ instance.server_name }}.master
+{% if instance.workers %}
+
+# This service should be restarted when the synapse target is restarted.
+PartOf=synapse-{{ instance.name }}.target
+ReloadPropagatedFrom=synapse-{{ instance.name }}.target
+{% endif %}
+
+[Service]
+Type={{ 'notify' if instance.workers else 'simple' }}
+NotifyAccess=main
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=3
+LimitNOFILE=102400
+User=synapse-{{ instance.name }}
+Group=synapse-{{ instance.name }}
+WorkingDirectory=/var/opt/synapse/{{ instance.name }}
+ExecStart=/opt/synapse/env/bin/python -m synapse.app.homeserver --config-path=/etc/opt/synapse/{{ instance.server_name }}.homeserver.yaml
+SyslogIdentifier=synapse-{{ instance.name }}
+# adjust the cache factor if necessary
+# Environment=SYNAPSE_CACHE_FACTOR=2.0
+{% if instance.jemalloc %}
+Environment=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+{% endif %}
+
+[Install]
+{% if instance.workers %}
+WantedBy=synapse-{{ instance.name }}.target
+{% else %}
+WantedBy=multi-user.target
+{% endif %}

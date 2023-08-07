@@ -1,0 +1,32 @@
+[Unit]
+Description=Synapse %i
+AssertPathExists=/etc/opt/synapse/%i.yaml
+
+# This service should be restarted when the synapse target is restarted.
+PartOf=synapse-{{ instance.name }}.target
+ReloadPropagatedFrom=synapse-{{ instance.name }}.target
+
+# if this is started at the same time as the main, let the main process start
+# first, to initialise the database schema.
+After=synapse-{{ instance.name }}.service
+
+[Service]
+Type=notify
+NotifyAccess=main
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=3
+LimitNOFILE=102400
+User=synapse-{{ instance.name }}
+Group=synapse-{{ instance.name }}
+WorkingDirectory=/var/opt/synapse/{{ instance.name }}
+ExecStart=/opt/synapse/env/bin/python -m synapse.app.{{ worker.app }} --config-path=/etc/opt/synapse/{{ instance.server_name }}.homeserver.yaml --config-path=/etc/opt/synapse/%i.yaml
+SyslogIdentifier=synapse-{{ instance.name }}-%i
+# adjust the cache factor if necessary
+# Environment=SYNAPSE_CACHE_FACTOR=2.0
+{% if instance.jemalloc %}
+Environment=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+{% endif %}
+
+[Install]
+WantedBy=synapse-{{ instance.name }}.target

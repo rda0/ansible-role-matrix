@@ -11,7 +11,7 @@
 - name: 'instance {{ instance.name }} create main homeserver config'
   template:
     src: synapse/homeserver.yaml.j2
-    dest: /etc/opt/synapse/{{ instance.server_name }}.homeserver.yaml
+    dest: '/etc/opt/synapse/{{ instance.server_name }}.homeserver.yaml'
     owner: root
     group: 'synapse-{{ instance.name }}'
     mode: '0640'
@@ -19,7 +19,7 @@
 - name: 'instance {{ instance.name }} create main homeserver log config'
   template:
     src: synapse/log.config.j2
-    dest: /etc/opt/synapse/{{ instance.server_name }}.log.config
+    dest: '/etc/opt/synapse/{{ instance.server_name }}.log.config'
     owner: root
     group: 'synapse-{{ instance.name }}'
     mode: '0640'
@@ -30,7 +30,7 @@
 - name: 'instance {{ instance.name }} create worker configs'
   template:
     src: synapse/worker.yaml.j2
-    dest: /etc/opt/synapse/{{ instance.server_name }}.worker.{{ worker.name }}.yaml
+    dest: '/etc/opt/synapse/{{ instance.server_name }}.worker.{{ worker.name }}.yaml'
     owner: root
     group: 'synapse-{{ instance.name }}'
     mode: '0640'
@@ -42,7 +42,7 @@
 - name: 'instance {{ instance.name }} create worker log configs'
   template:
     src: synapse/log.config.j2
-    dest: /etc/opt/synapse/{{ instance.server_name }}.log.worker.{{ worker.name }}.config
+    dest: '/etc/opt/synapse/{{ instance.server_name }}.log.worker.{{ worker.name }}.config'
     owner: root
     group: 'synapse-{{ instance.name }}'
     mode: '0640'
@@ -54,7 +54,113 @@
 - name: 'instance {{ instance.name }} create signing key'
   template:
     src: synapse/signing.key.j2
-    dest: /etc/opt/synapse/{{ instance.server_name }}.signing.key
+    dest: '/etc/opt/synapse/{{ instance.server_name }}.signing.key'
     owner: root
     group: 'synapse-{{ instance.name }}'
     mode: '0640'
+
+- name: 'instance {{ instance.name }} create systemd service unit'
+  template:
+    src: synapse/systemd.service.j2
+    dest: '/etc/systemd/system/synapse-{{ instance.name }}.service'
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: when-block
+  when: instance.workers
+  block:
+
+    - name: 'instance {{ instance.name }} create systemd target unit'
+      template:
+        src: synapse/systemd.target.j2
+        dest: '/etc/systemd/system/synapse-{{ instance.name }}.target'
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: 'instance {{ instance.name }} create systemd generic worker unit'
+      template:
+        src: synapse/systemd.worker.service.j2
+        dest: '/etc/systemd/system/synapse-{{ instance.name }}-worker@.service'
+        owner: root
+        group: root
+        mode: '0644'
+      vars:
+        worker:
+          app: generic_worker
+
+    - name: 'instance {{ instance.name }} create systemd federation sender worker unit'
+      template:
+        src: synapse/systemd.worker.service.j2
+        dest: '/etc/systemd/system/synapse-{{ instance.name }}-worker-federation-sender@.service'
+        owner: root
+        group: root
+        mode: '0644'
+      vars:
+        worker:
+          app: federation_sender
+
+    - name: 'instance {{ instance.name }} create systemd pusher worker unit'
+      template:
+        src: synapse/systemd.worker.service.j2
+        dest: '/etc/systemd/system/synapse-{{ instance.name }}-worker-pusher@.service'
+        owner: root
+        group: root
+        mode: '0644'
+      vars:
+        worker:
+          app: pusher
+
+- name: "instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} systemd service unit"
+  systemd:
+    name: 'synapse-{{ instance.name }}.service'
+    enabled: '{{ instance.enabled }}'
+
+- name: when-block
+  when: instance.workers
+  block:
+
+    - name: "instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} systemd target unit"
+      systemd:
+        name: 'synapse-{{ instance.name }}.target'
+        enabled: '{{ instance.enabled }}'
+
+    - name: "instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} systemd generic worker units"
+      systemd:
+        name: 'synapse-{{ instance.name }}-worker@{{ instance.server_name }}.worker.{{ worker.name }}.service'
+        enabled: '{{ instance.enabled }}'
+      loop: "{{ instance.workers | selectattr('app', 'equalto', 'generic_worker') | list }}"
+      loop_control:
+        loop_var: worker
+        label: "{{ worker.name }}"
+
+    - name: "instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} systemd federation sender worker unit"
+      systemd:
+        name: 'synapse-{{ instance.name }}-worker-federation-sender@{{ instance.server_name }}.worker.{{ worker.name }}.service'
+        enabled: '{{ instance.enabled }}'
+      loop: "{{ instance.workers | selectattr('app', 'equalto', 'federation_sender') | list }}"
+      loop_control:
+        loop_var: worker
+        label: "{{ worker.name }}"
+
+    - name: "instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} systemd pusher worker unit"
+      systemd:
+        name: 'synapse-{{ instance.name }}-worker-pusher@{{ instance.server_name }}.worker.{{ worker.name }}.service'
+        enabled: '{{ instance.enabled }}'
+      loop: "{{ instance.workers | selectattr('app', 'equalto', 'pusher') | list }}"
+      loop_control:
+        loop_var: worker
+        label: "{{ worker.name }}"
+
+- name: "instance {{ instance.name }} {{ instance.enabled | ternary('start', 'stop') }} systemd service unit"
+  systemd:
+    name: 'synapse-{{ instance.name }}.service'
+    state: "{{ instance.enabled | ternary('started', 'stopped') }}"
+  when: not instance.workers
+
+- name: "instance {{ instance.name }} {{ instance.enabled | ternary('start', 'stop') }} systemd target unit"
+  systemd:
+    name: 'synapse-{{ instance.name }}.target'
+    state: "{{ instance.enabled | ternary('started', 'stopped') }}"
+  when: instance.workers
