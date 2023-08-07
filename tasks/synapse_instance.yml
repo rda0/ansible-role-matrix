@@ -27,6 +27,18 @@
     worker:
       name: homeserver
 
+- name: create worker configs
+  template:
+    src: synapse/worker.yaml.j2
+    dest: /etc/opt/synapse/{{ instance.server_name }}.worker.{{ worker.name }}.yaml
+    owner: root
+    group: 'synapse-{{ instance.name }}'
+    mode: '0640'
+  loop: "{{ instance.workers }}"
+  loop_control:
+    loop_var: worker
+    label: "{{ worker.name }}"
+
 - name: create worker log configs
   template:
     src: synapse/log.config.j2

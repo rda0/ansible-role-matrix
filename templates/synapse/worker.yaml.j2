@@ -1,0 +1,30 @@
+worker_app: synapse.app.{{ worker.app }}
+worker_name: {{ worker.name }}
+
+{% if worker.listeners | default([]) %}
+worker_listeners:
+{%   if worker.listeners.main | default('') %}
+  - type: http
+    bind_addresses: ['127.0.0.1']
+    port: {{ worker.listeners.main }}
+    tls: false
+    x_forwarded: true
+    resources:
+      - names: [client, federation]
+        compress: false
+{%   endif %}
+{%   if worker.listeners.replication | default('') %}
+  - type: http
+    bind_addresses: ['127.0.0.1']
+    port: {{ worker.listeners.replication }}
+    resources:
+      - names: [replication]
+{%   endif %}
+{%   if worker.listeners.metrics | default('') %}
+  - type: metrics
+    bind_addresses: ['']
+    port: {{ worker.listeners.metrics }}
+{%   endif %}
+{% endif %}
+
+worker_log_config: /etc/opt/synapse/{{ instance.server_name }}.log.worker.{{ worker.name }}.config
