@@ -1,6 +1,6 @@
 # TODO: create database
 
-- name: create log directory
+- name: 'instance {{ instance.name }} create log directory'
   file:
     path: '/var/log/synapse/{{ instance.name }}'
     state: directory
@@ -8,7 +8,7 @@
     group: 'synapse-{{ instance.name }}'
     mode: '0770'
 
-- name: create main homeserver config
+- name: 'instance {{ instance.name }} create main homeserver config'
   template:
     src: synapse/homeserver.yaml.j2
     dest: /etc/opt/synapse/{{ instance.server_name }}.homeserver.yaml
@@ -16,7 +16,7 @@
     group: 'synapse-{{ instance.name }}'
     mode: '0640'
 
-- name: create main homeserver log config
+- name: 'instance {{ instance.name }} create main homeserver log config'
   template:
     src: synapse/log.config.j2
     dest: /etc/opt/synapse/{{ instance.server_name }}.log.config
@@ -27,7 +27,7 @@
     worker:
       name: homeserver
 
-- name: create worker configs
+- name: 'instance {{ instance.name }} create worker configs'
   template:
     src: synapse/worker.yaml.j2
     dest: /etc/opt/synapse/{{ instance.server_name }}.worker.{{ worker.name }}.yaml
@@ -39,7 +39,7 @@
     loop_var: worker
     label: "{{ worker.name }}"
 
-- name: create worker log configs
+- name: 'instance {{ instance.name }} create worker log configs'
   template:
     src: synapse/log.config.j2
     dest: /etc/opt/synapse/{{ instance.server_name }}.log.worker.{{ worker.name }}.config
