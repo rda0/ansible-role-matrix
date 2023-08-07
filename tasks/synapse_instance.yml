@@ -50,3 +50,11 @@
   loop_control:
     loop_var: worker
     label: "{{ worker.name }}"
+
+- name: 'instance {{ instance.name }} create signing key'
+  template:
+    src: synapse/signing.key.j2
+    dest: /etc/opt/synapse/{{ instance.server_name }}.signing.key
+    owner: root
+    group: 'synapse-{{ instance.name }}'
+    mode: '0640'

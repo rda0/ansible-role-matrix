@@ -58,6 +58,7 @@ _matrix_synapse_instances_defaults:
   report_stats: False
   report_stats_endpoint: ''
   app_service_config_files: []
+  #signing_key: ''  #required, default: loaded from vault_matrix_synapse_instances
   #macaroon_secret_key: ''  #required, default: loaded from vault_matrix_synapse_instances
   #form_secret: ''  #required, default: loaded from vault_matrix_synapse_instances
   trusted_key_servers: '{{ matrix_synapse_trusted_key_servers_default }}'
