@@ -164,3 +164,6 @@
     name: 'synapse-{{ instance.name }}.target'
     state: "{{ instance.enabled | ternary('started', 'stopped') }}"
   when: instance.workers
+
+# TODO: create initial admin user
+# TODO: create local users

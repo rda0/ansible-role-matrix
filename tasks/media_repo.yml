@@ -1,0 +1,81 @@
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    state: directory
+    owner: "{{ item.owner | default('media-repo') }}"
+    group: "{{ item.group | default('media-repo') }}"
+    mode: "{{ item.mode | default('0750') }}"
+  loop:
+    - path: /opt/media-repo/bin
+      owner: root
+      group: root
+      mode: '0755'
+    - path: /etc/opt/media-repo
+      owner: root
+    - path: /var/log/media-repo
+      owner: root
+      mode: '0770'
+    - path: /var/opt/media-repo
+    - path: /var/opt/media-repo/thumbnails
+    - path: /var/opt/media-repo/remote_media
+    - path: /var/opt/media-repo/local_media
+    - path: /var/opt/media-repo/archives
+
+- name: install dependecies
+  package:
+    name:
+      - imagemagick
+      - ffmpeg
+
+- name: create main config
+  template:
+    src: media_repo/00-main.yaml.j2
+    dest: /etc/opt/media-repo/00-main.yaml
+    owner: root
+    group: media-repo
+    mode: '0640'
+
+- name: create domain configs
+  template:
+    src: media_repo/domain.yaml.j2
+    dest: '/etc/opt/media-repo/1{{ index }}-domain-{{ instance.name }}.yaml'
+    owner: root
+    group: media-repo
+    mode: '0640'
+  loop: '{{ matrix_media_repo_instances }}'
+  loop_control:
+    loop_var: instance
+    label: '1{{ index }}-domain-{{ instance.name }}'
+    index_var: index
+
+- name: install media repo binary
+  get_url:
+    url: 'https://github.com/turt2live/matrix-media-repo/releases/download/{{ matrix_media_repo_version }}/media_repo-linux-x64'
+    dest: '/opt/media-repo/bin/media_repo-{{ matrix_media_repo_version }}'
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: symlink media repo version binary
+  file:
+    src: '/opt/media-repo/bin/media_repo-{{ matrix_media_repo_version }}'
+    dest: /opt/media-repo/bin/media_repo
+    state: link
+    owner: root
+    group: root
+  ignore_errors: '{{ ansible_check_mode }}'
+
+- name: create systemd unit
+  template:
+    src: media_repo/systemd.service.j2
+    dest: /etc/systemd/system/media-repo.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: enable and start systemd unit
+  systemd:
+    name: media-repo.service
+    daemon_reload: True
+    enabled: True
+    state: started

@@ -1,0 +1,146 @@
+repo:
+  bindAddress: '127.0.0.1'
+  port: 8000
+  logDirectory: /var/log/media-repo
+  logColors: false
+  jsonLogs: false
+  logLevel: "info"
+  trustAnyForwardedAddress: false
+  useForwardedHost: true
+federation:
+  backoffAt: 20
+database:
+  postgres: "postgres://media-repo@/mediarepo?host=/var/run/postgresql"
+  pool:
+    maxConnections: 25
+    maxIdleConnections: 5
+admins:
+  {{ matrix_admin_mxids | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+datastores:
+  - type: file
+    enabled: true
+    forKinds: ["thumbnails"]
+    opts:
+      path: /var/opt/media-repo/thumbnails
+  - type: file
+    enabled: true
+    forKinds: ["remote_media"]
+    opts:
+      path: /var/opt/media-repo/remote_media
+  - type: file
+    enabled: true
+    forKinds: ["local_media"]
+    opts:
+      path: /var/opt/media-repo/local_media
+  - type: file
+    enabled: true
+    forKinds: ["archives"]
+    opts:
+      path: /var/opt/media-repo/archives
+archiving:
+  enabled: true
+  selfService: false
+  targetBytesPerPart: 209715200 # 200mb default
+uploads:
+  maxBytes: 104857600 # 100MB default, 0 to disable
+  minBytes: 100 # 100 bytes by default
+  quotas:
+    enabled: false
+    users:
+      - glob: "@*:*"  # Affect all users. Use asterisks (*) to match any character.
+        maxBytes: 53687063712 # 50GB default, 0 to disable
+downloads:
+  maxBytes: 104857600 # 100MB default, 0 to disable
+  numWorkers: 10
+  failureCacheMinutes: 5
+  expireAfterDays: 0
+  defaultRangeChunkSizeBytes: 10485760 # 10MB default
+urlPreviews:
+  enabled: true # If enabled, the preview_url routes will be accessible
+  maxPageSizeBytes: 10485760 # 10MB default, 0 to disable
+  previewUnsafeCertificates: false
+  numWords: 50 # The number of words to include in a preview (maximum)
+  maxLength: 200 # The maximum number of characters for a description
+  numTitleWords: 30 # The maximum number of words to include in a preview's title
+  maxTitleLength: 150 # The maximum number of characters for a title
+  filePreviewTypes:
+    - "image/*"
+  numWorkers: 10
+  disallowedNetworks:
+    - "127.0.0.1/8"
+    - "10.0.0.0/8"
+    - "172.16.0.0/12"
+    - "192.168.0.0/16"
+    - "100.64.0.0/10"
+    - "169.254.0.0/16"
+    - '::1/128'
+    - 'fe80::/64'
+    - 'fc00::/7'
+  allowedNetworks:
+    - "0.0.0.0/0" # "Everything". The blacklist will help limit this.
+                  # This is the default value for this field.
+    - '::/0'
+  expireAfterDays: 0
+  defaultLanguage: "en-US,en"
+  userAgent: "matrix-media-repo"
+  oEmbed: false
+thumbnails:
+  maxSourceBytes: 10485760 # 10MB default, 0 to disable
+  maxPixels: 32000000 # 32M default
+  numWorkers: 100
+  sizes:
+    - width: 32
+      height: 32
+    - width: 96
+      height: 96
+    - width: 320
+      height: 240
+    - width: 640
+      height: 480
+    - width: 768   # This size is primarily used for audio thumbnailing.
+      height: 240
+    - width: 800
+      height: 600
+  dynamicSizing: false
+  types:
+    - "image/jpeg"
+    - "image/jpg"
+    - "image/png"
+    - "image/apng"
+    - "image/gif"
+    - "image/heif"
+    - "image/webp"
+    - "image/svg+xml" # Be sure to have ImageMagick installed to thumbnail SVG files
+    - "audio/mpeg"
+    - "audio/ogg"
+    - "audio/wav"
+    - "audio/flac"
+    - "video/mp4" # Be sure to have ffmpeg installed to thumbnail video files
+  allowAnimated: true
+  defaultAnimated: false
+  maxAnimateSizeBytes: 10485760 # 10MB default, 0 to disable
+  stillFrame: 0.5
+  expireAfterDays: 0
+rateLimit:
+  enabled: true
+  requestsPerSecond: 1
+  burst: 10
+identicons:
+  enabled: true
+quarantine:
+  replaceThumbnails: true
+  replaceDownloads: false
+  allowLocalAdmins: true
+timeouts:
+  urlPreviewTimeoutSeconds: 10
+  federationTimeoutSeconds: 120
+  clientServerTimeoutSeconds: 30
+metrics:
+  enabled: true
+  bindAddress: "127.0.0.1"
+  port: 9000
+redis:
+  # warning: enabling needs cache config (see docs), which may interfere with synapse redis
+  enabled: false
+  # use db 1 as synapse uses default db 0
+  databaseNumber: 1

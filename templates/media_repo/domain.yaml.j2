@@ -1,0 +1,28 @@
+homeserver: {{ instance.homeserver }}
+csApi: "{{ instance.cs_api }}"
+backoffAt: 10
+adminApiKind: "synapse"
+{% if instance.uploads | default({}) %}
+uploads:
+{%   if instance.uploads.max_mb | default(None) or instance.uploads.max_mb | default(None) == 0 %}
+  maxBytes: {{ instance.uploads.max_mb * 1024**2 | int }} # {{ instance.uploads.max_mb }} MiB
+{%   endif %}
+{%   if instance.uploads.min_b | default(None) %}
+  minBytes: {{ instance.uploads.min_b | int }} # {{ instance.uploads.min_b }} bytes
+{%   endif %}
+{%   if instance.uploads.quotas | default({}) %}
+  quotas:
+    enabled: true
+    users:
+{%     for user in instance.uploads.quotas.users | default([]) %}
+      - glob: "{{ user.glob }}"
+        maxBytes: {{ user.max_gb * 1024**3 | int }} # {{ user.max_gb }} GiB
+{%     endfor %}
+      - glob: "@*:*"
+        maxBytes: {{ instance.uploads.quotas.default_gb * 1024**3 | int }} # {{ instance.uploads.quotas.default_gb }} GiB
+{%   endif %}
+{% endif %}
+{% if not instance.url_previews | default(True) %}
+urlPreviews:
+  enabled: false
+{% endif %}
