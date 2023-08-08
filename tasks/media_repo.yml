@@ -79,3 +79,5 @@
     daemon_reload: True
     enabled: True
     state: started
+
+# TODO: add scripts in /root/bin/media
