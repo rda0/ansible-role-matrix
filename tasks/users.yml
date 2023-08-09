@@ -1,3 +1,8 @@
+- name: create groups
+  group:
+    name: '{{ item.name }}'
+  loop: '{{ matrix_groups }}'
+
 - name: create system users
   user:
     name: '{{ item.name }}'
@@ -5,6 +10,7 @@
     shell: "{{ item.shell | default('/usr/sbin/nologin') }}"
     system: True
     create_home: False
+    groups: "{{ item.groups | default('') }}"
   loop: '{{ matrix_system_users }}'
 
 - name: create home directories

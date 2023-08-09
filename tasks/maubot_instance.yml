@@ -1,0 +1,41 @@
+# TODO: create database
+
+- name: 'instance {{ instance.name }} create directories'
+  file:
+    path: '{{ item.path }}'
+    state: directory
+    owner: "{{ item.owner | default('maubot-' + instance.name) }}"
+    group: "{{ item.group | default('maubot-' + instance.name) }}"
+    mode: "{{ item.mode | default('0750') }}"
+  loop:
+    - path: /var/opt/maubot/{{ instance.name }}
+      mode: '0755'
+    - path: /var/opt/maubot/{{ instance.name }}/plugins
+    - path: /var/opt/maubot/{{ instance.name }}/trash
+    - path: /var/opt/maubot/{{ instance.name }}/logs
+    - path: /var/log/maubot/{{ instance.name }}
+
+- name: 'instance {{ instance.name }} create config'
+  template:
+    src: maubot/config.yaml.j2
+    dest: '/etc/opt/maubot/{{ instance.name }}.yaml'
+    owner: 'maubot-{{ instance.name }}'
+    group: 'maubot-{{ instance.name }}'
+    mode: '0600'
+
+- name: 'instance {{ instance.name }} create systemd service unit'
+  template:
+    src: maubot/systemd.service.j2
+    dest: '/etc/systemd/system/maubot-{{ instance.name }}.service'
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} and {{ instance.name }} {{ instance.enabled | ternary('start', 'stop') }} systemd service unit"
+  systemd:
+    name: 'maubot-{{ instance.name }}.service'
+    enabled: '{{ instance.enabled }}'
+    state: "{{ instance.enabled | ternary('started', 'stopped') }}"
+
+# TODO: create initial admin user
+# TODO: create local users

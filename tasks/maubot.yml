@@ -1,0 +1,43 @@
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    state: directory
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0755') }}"
+  loop:
+    - path: /opt/maubot
+    - path: /var/opt/maubot
+    - path: /var/log/maubot
+    - path: /etc/opt/maubot
+      group: maubot
+      mode: '0775'
+
+- name: create venv
+  include_tasks:
+    file: venv_python.yml
+  vars:
+    base_path: /opt/maubot
+    packages:
+      - maubot
+
+- name: clone maubot repo
+  git:
+    repo: https://github.com/maubot/maubot.git
+    dest: /opt/maubot/git
+    update: False
+    #version: ''
+
+- name: set fact _matrix_maubot_instances
+  set_fact:
+    _matrix_maubot_instances: "{{ _matrix_maubot_instances + [_matrix_maubot_instances_defaults | combine(item, recursive=True)] }}"
+  loop: '{{ matrix_maubot_instances }}'
+  loop_control:
+    label: '{{ item.name }}'
+
+- name: include maubot instance
+  include_tasks: maubot_instance.yml
+  loop: "{{ _matrix_maubot_instances }}"
+  loop_control:
+    loop_var: instance
+    label: "{{ instance.name }}"

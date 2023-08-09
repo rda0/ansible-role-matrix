@@ -4,6 +4,7 @@ import_matrix_users: True
 import_matrix_synapse: True
 import_matrix_media_repo: True
 import_matrix_ma1sd: False
+import_matrix_maubot: False
 
 matrix_venv_python_virtualenv: env
 matrix_venv_python_requirements: requirements.txt
@@ -16,6 +17,7 @@ matrix_noreply_email: ''
 matrix_admin_mxids: []
 matrix_client_base_url: ''
 matrix_system_users: {}
+matrix_groups: {}
 
 matrix_synapse_trusted_key_servers_default: []
 matrix_synapse_federation_domain_whitelist_default: []
@@ -34,6 +36,9 @@ vault_matrix_media_repo: {}
 
 matrix_ma1sd_config: {}
 vault_matrix_ma1sd: {}
+
+matrix_maubot_instances: []
+vault_matrix_maubot_instances: {}
 
 # private set_fact variable defaults (do not use in inventory)
 _matrix_synapse_instances: []
@@ -94,3 +99,9 @@ _matrix_synapse_instances_defaults:
   pusher_instances: []
   update_user_directory_from_worker: ''
   worker_replication_secret: ''
+
+_matrix_maubot_instances: []
+_matrix_maubot_instances_defaults:
+  enabled: True
+  unshared_secret: generate
+  homeservers: []

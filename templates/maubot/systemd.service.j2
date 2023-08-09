@@ -1,0 +1,18 @@
+[Unit]
+Description=Maubot {{ instance.name }}
+
+[Service]
+Type=simple
+NotifyAccess=main
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=3
+LimitNOFILE=10240
+User=maubot-{{ instance.name }}
+Group=maubot-{{ instance.name }}
+WorkingDirectory=/var/opt/maubot/{{ instance.name }}
+ExecStart=/opt/maubot/env/bin/python3 -m maubot -c /etc/opt/maubot/{{ instance.name }}.yaml -b /opt/maubot/git/maubot/example-config.yaml
+SyslogIdentifier=maubot-{{ instance.name }}
+
+[Install]
+WantedBy=multi-user.target

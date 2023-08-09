@@ -27,7 +27,6 @@
       - matrix-synapse[redis]
       - lxml
       - netaddr
-  register: matrix_synapse_create_venv_reg
 
 - name: clone matrix-synapse-rest-password-provider repo
   git:

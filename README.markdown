@@ -7,6 +7,7 @@ Todo:
 
 - Install a new server from scratch
 - Restart services (+daemon_reload)
+- Add asreg
 - See `TODO` in various files
 
 Notes:
