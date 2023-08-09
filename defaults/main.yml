@@ -19,6 +19,12 @@ matrix_synapse_trusted_key_servers_default: []
 matrix_synapse_federation_domain_whitelist_default: []
 matrix_synapse_instances: []
 vault_matrix_synapse_instances: {}
+matrix_synapse_rest_auth_provider_install: False
+matrix_synapse_rest_auth_provider_git:
+  repo: https://github.com/davidmehren/matrix-synapse-rest-password-provider
+  update: False
+  branch: module_api
+  commit: b6bdebb
 
 matrix_media_repo_version: v1.2.13
 matrix_media_repo_instances: []

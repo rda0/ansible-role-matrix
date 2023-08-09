@@ -27,6 +27,25 @@
       - matrix-synapse[redis]
       - lxml
       - netaddr
+  register: matrix_synapse_create_venv_reg
+
+- name: clone matrix-synapse-rest-password-provider repo
+  git:
+    repo: '{{ matrix_synapse_rest_auth_provider_git.repo }}'
+    dest: /opt/matrix-synapse-rest-password-provider
+    update: '{{ matrix_synapse_rest_auth_provider_git.update | bool }}'
+    version: '{{ matrix_synapse_rest_auth_provider_git.commit | default(matrix_synapse_rest_auth_provider_git.branch) }}'
+  when: matrix_synapse_rest_auth_provider_install
+
+- name: deploy rest-auth-provider plugin
+  copy:
+    src: /opt/matrix-synapse-rest-password-provider/rest_auth_provider.py
+    dest: /opt/synapse/env/lib/python{{ ansible_python.version.major }}.{{ ansible_python.version.minor }}/site-packages/rest_auth_provider.py
+    remote_src: True
+    owner: root
+    group: root
+    mode: '0644'
+  when: matrix_synapse_rest_auth_provider_install
 
 - name: create directories
   file:
