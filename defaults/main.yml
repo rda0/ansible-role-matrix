@@ -16,8 +16,8 @@ matrix_admin_email: ''
 matrix_noreply_email: ''
 matrix_admin_mxids: []
 matrix_client_base_url: ''
-matrix_system_users: {}
-matrix_groups: {}
+matrix_system_users: []
+matrix_groups: []
 
 matrix_synapse_trusted_key_servers_default: []
 matrix_synapse_federation_domain_whitelist_default: []
