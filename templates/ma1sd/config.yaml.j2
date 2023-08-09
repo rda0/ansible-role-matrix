@@ -1,0 +1,216 @@
+# Sample configuration file explaining the minimum required keys to be set to run ma1sd
+#
+# For a complete list of options, see https://github.com/ma1uta/ma1sd/docs/README.md
+#
+# Please follow the Getting Started guide if this is your first time using/configuring ma1sd
+#
+#  -- https://github.com/ma1uta/ma1sd/blob/master/docs/getting-started.md#getting-started
+#
+
+#######################
+# Matrix config items #
+#######################
+# Matrix domain, same as the domain configure in your Homeserver configuration.
+# NOTE: in Synapse Homeserver, the Matrix domain is defined as 'server_name' in configuration file.
+#
+# This is used to build the various identifiers in all the features.
+#
+# If the hostname of the public URL used to reach your Matrix services is different from your Matrix domain,
+# per example matrix.domain.tld vs domain.tld, then use the server.name configuration option.
+# See the "Configure" section of the Getting Started guide for more info.
+#
+matrix:
+  domain: '{{ matrix_ma1sd_config.domain_server_name }}'
+  v1: true   # deprecated
+  v2: true  # MSC2140 API v2. Disabled by default in order to preserve backward compatibility.
+
+server:
+  name: '{{ matrix_ma1sd_config.domain_api }}'
+
+################
+# Signing keys #
+################
+# Absolute path for the Identity Server signing keys database.
+# /!\ THIS MUST **NOT** BE YOUR HOMESERVER KEYS FILE /!\
+# If this path does not exist, it will be auto-generated.
+#
+# During testing, /var/tmp/ma1sd/keys is a possible value
+# For production, recommended location shall be one of the following:
+#   - /var/lib/ma1sd/keys
+#   - /var/opt/ma1sd/keys
+#   - /var/local/ma1sd/keys
+#
+key:
+  path: '/var/lib/ma1sd/keys'
+
+
+# Path to the SQLite DB file for ma1sd internal storage
+# /!\ THIS MUST **NOT** BE YOUR HOMESERVER DATABASE /!\
+#
+# Examples:
+#  - /var/opt/ma1sd/store.db
+#  - /var/local/ma1sd/store.db
+#  - /var/lib/ma1sd/store.db
+#
+storage:
+  backend: postgresql
+  provider:
+    postgresql:
+      database: //localhost:5432/ma1sd
+      username: ma1sd
+      password: {{ vault_matrix_ma1sd.database_password }}
+#storage:
+#  backend: postgresql
+#  provider:
+#    postgresql:
+#      database: //file%3A%2F%2F%2Frun%2Fpostgresql%2F.s.PGSQL.5432/ma1sd
+
+###################
+# Identity Stores #
+###################
+# If you are using synapse standalone and do not have an Identity store,
+# see https://github.com/ma1uta/ma1sd/blob/master/docs/stores/synapse.md#synapse-identity-store
+#
+# If you would like to integrate with your AD/Samba/LDAP server,
+# see https://github.com/ma1uta/ma1sd/blob/master/docs/stores/ldap.md
+#
+# For any other Identity store, or to simply discover them,
+# see https://github.com/ma1uta/ma1sd/blob/master/docs/stores/README.md
+{% if matrix_ma1sd_config.ldap | default({}) %}
+ldap:
+  {{ matrix_ma1sd_config.ldap | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+
+{% endif %}
+{% if matrix_ma1sd_config.exec | default({}) %}
+exec:
+  {{ matrix_ma1sd_config.exec | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+
+{% endif %}
+
+#################################################
+# Notifications for invites/addition to profile #
+#################################################
+# This is mandatory to deal with anything e-mail related.
+#
+# For an introduction to sessions, invites and 3PIDs in general,
+# see https://github.com/ma1uta/ma1sd/blob/master/docs/threepids/session/session.md#3pid-sessions
+#
+# If you would like to change the content of the notifications,
+# see https://github.com/ma1uta/ma1sd/blob/master/docs/threepids/notification/template-generator.md
+#
+#### E-mail connector
+threepid:
+  medium:
+    email:
+      identity:
+        # The e-mail to send as.
+        from: "{{ matrix_noreply_email }}"
+
+      connectors:
+        smtp:
+          # SMTP host
+          host: "localhost"
+
+          # TLS mode for the connection
+          # Possible values:
+          #  0    Disable any kind of TLS entirely
+          #  1    Enable STARTLS if supported by server (default)
+          #  2    Force STARTLS and fail if not available
+          #  3    Use full TLS/SSL instead of STARTLS
+          #
+          tls: 0
+
+          # SMTP port
+          # Be sure to adapt depending on your TLS choice, if changed from default
+          port: 25
+
+          # Login for SMTP
+          login: ""
+
+          # Password for the account
+          password: ""
+
+{% if matrix_ma1sd_config.dns | default({}) %}
+dns:
+  {{ matrix_ma1sd_config.dns | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+
+{% endif %}
+
+#forward:
+# servers:
+#    - 'matrix.org'
+
+
+#directory:
+#  exclude:
+#    homeserver: true
+#    threepid: true
+
+
+logging:
+  root: error  # default level for all loggers (apps and thirdparty libraries)
+  app: warn    # log level only for the ma1sd
+
+#logging:
+#  root: debug  # default level for all loggers (apps and thirdparty libraries)
+#  app: debug    # log level only for the ma1sd
+
+
+#### MSC2134 (hash lookup)
+
+hashing:
+  enabled: true # enable or disable the hash lookup MSC2140 (default is false)
+  pepperLength: 20 # length of the pepper value (default is 20)
+  rotationPolicy: per_requests # or `per_seconds` how often the hashes will be updating
+  hashStorageType: sql # or `in_memory` where the hashes will be stored
+  algorithms:
+      #- none   # the same as v1 bulk lookup
+    - sha256 # hash the 3PID and pepper.
+  delay: 2m # how often hashes will be updated if rotation policy = per_seconds (default is 10s)
+  requests: 10 # how many lookup requests will be performed before updating hashes if rotation policy = per_requests (default is 10)
+
+### hash lookup for synapseSql provider.
+# synapseSql:
+#   lookup:
+#     query: 'select user_id as mxid, medium, address from user_threepids' # query for retrive 3PIDs for hashes.
+#   legacyRoomNames: false  # use the old query to get room names.
+
+### hash lookup for ldap provider (with example of the ldap configuration)
+# ldap:
+#   enabled: true
+#   lookup: true # hash lookup
+#   connection:
+#     host: 'ldap.domain.tld'
+#     port: 389
+#     bindDn: 'cn=admin,dc=domain,dc=tld'
+#     bindPassword: 'Secret'
+#     baseDNs:
+#       - 'dc=domain,dc=tld'
+#   attribute:
+#     uid:
+#       type: 'uid' # or mxid
+#       value: 'cn'
+#     name: 'displayName'
+#   identity:
+#     filter: '(objectClass=inetOrgPerson)'
+
+#### MSC2140 (Terms)
+#policy:
+#  policies:
+#    term_name: # term name
+#      version: 1.0 # version
+#      terms:
+#        en:  # lang
+#          name: term name en  # localized name
+#          url: https://ma1sd.host.tld/term_en.html  # localized url
+#        fe:  # lang
+#          name: term name fr  # localized name
+#          url: https://ma1sd.host.tld/term_fr.html  # localized url
+#      regexp:
+#        - '/_matrix/identity/v2/account.*'
+#        - '/_matrix/identity/v2/hash_details'
+#        - '/_matrix/identity/v2/lookup'
+#
+
+# logging:
+#   root: trace   # logging level

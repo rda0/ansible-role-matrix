@@ -22,3 +22,8 @@
       import_tasks: media_repo.yml
       tags: matrix_media_repo
       when: import_matrix_media_repo
+
+    - name: import tasks from ma1sd.yml
+      import_tasks: ma1sd.yml
+      tags: matrix_ma1sd
+      when: import_matrix_ma1sd

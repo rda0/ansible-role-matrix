@@ -3,6 +3,7 @@ import_matrix_dependencies: True
 import_matrix_users: True
 import_matrix_synapse: True
 import_matrix_media_repo: True
+import_matrix_ma1sd: False
 
 matrix_venv_python_virtualenv: env
 matrix_venv_python_requirements: requirements.txt
@@ -11,6 +12,7 @@ matrix_venv_python_system_pkgs: False
 matrix_venv_python_reinit: False
 
 matrix_admin_email: ''
+matrix_noreply_email: ''
 matrix_admin_mxids: []
 matrix_client_base_url: ''
 matrix_system_users: {}
@@ -29,6 +31,9 @@ matrix_synapse_rest_auth_provider_git:
 matrix_media_repo_version: v1.2.13
 matrix_media_repo_instances: []
 vault_matrix_media_repo: {}
+
+matrix_ma1sd_config: {}
+vault_matrix_ma1sd: {}
 
 # private set_fact variable defaults (do not use in inventory)
 _matrix_synapse_instances: []
