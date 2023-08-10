@@ -32,3 +32,8 @@
       import_tasks: maubot.yml
       tags: matrix_maubot
       when: import_matrix_maubot
+
+    - name: import tasks from reminder_bot.yml
+      import_tasks: reminder_bot.yml
+      tags: matrix_reminder_bot
+      when: import_matrix_reminder_bot

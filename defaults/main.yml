@@ -5,6 +5,7 @@ import_matrix_synapse: True
 import_matrix_media_repo: True
 import_matrix_ma1sd: False
 import_matrix_maubot: False
+import_matrix_reminder_bot: False
 
 matrix_venv_python_virtualenv: env
 matrix_venv_python_requirements: requirements.txt
@@ -39,6 +40,9 @@ vault_matrix_ma1sd: {}
 
 matrix_maubot_instances: []
 vault_matrix_maubot_instances: {}
+
+matrix_reminder_bot: {}
+vault_matrix_reminder_bot: {}
 
 # private set_fact variable defaults (do not use in inventory)
 _matrix_synapse_instances: []

@@ -1,0 +1,23 @@
+[Unit]
+Description=Reminder Bot
+After=network.target
+{% if matrix_reminder_bot.start_service_after | default('') %}
+After={{ matrix_reminder_bot.start_service_after }}
+PartOf={{ matrix_reminder_bot.start_service_after }}
+{% endif %}
+
+[Service]
+#ExecStartPre=/bin/sleep 10
+Type=simple
+NotifyAccess=main
+Restart=always
+RestartSec=3
+LimitNOFILE=10240
+User=reminder-bot
+Group=reminder-bot
+WorkingDirectory=/var/opt/reminder-bot
+ExecStart=/opt/reminder-bot/env/bin/matrix-reminder-bot /etc/opt/reminder-bot/config.yaml
+SyslogIdentifier=reminder-bot
+
+[Install]
+WantedBy=multi-user.target
