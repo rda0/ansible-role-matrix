@@ -19,7 +19,7 @@
     state: directory
     owner: '{{ item.name }}'
     group: '{{ item.name }}'
-    mode: "{{ item.mode | default('0755') }}"
+    mode: "{{ item.mode | default('0750') }}"
   loop: '{{ matrix_system_users }}'
 
 # TODO: create postgres users

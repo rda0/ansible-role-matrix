@@ -8,8 +8,6 @@
     group: "{{ item.group | default('maubot-' + instance.name) }}"
     mode: "{{ item.mode | default('0750') }}"
   loop:
-    - path: /var/opt/maubot/{{ instance.name }}
-      mode: '0755'
     - path: /var/opt/maubot/{{ instance.name }}/plugins
     - path: /var/opt/maubot/{{ instance.name }}/trash
     - path: /var/opt/maubot/{{ instance.name }}/logs
