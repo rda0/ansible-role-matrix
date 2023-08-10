@@ -1,8 +1,6 @@
 - name: install synapse dependencies
   package:
     name:
-      - libpq5
-      - libpq-dev
       - redis-server
       - redis-tools
       - build-essential

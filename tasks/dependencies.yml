@@ -1,6 +1,8 @@
 - name: install venv python dependencies
   package:
     name:
+      - libpq5
+      - libpq-dev
       - python3-pip
       - python3-setuptools
       - python3-wheel
