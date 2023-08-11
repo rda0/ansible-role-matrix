@@ -42,3 +42,8 @@
       import_tasks: reminder_bot.yml
       tags: matrix_reminder_bot
       when: import_matrix_reminder_bot
+
+    - name: import tasks from webhook.yml
+      import_tasks: webhook.yml
+      tags: matrix_webhook
+      when: import_matrix_webhook

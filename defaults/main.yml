@@ -7,6 +7,7 @@ import_matrix_media_repo: True
 import_matrix_ma1sd: False
 import_matrix_maubot: False
 import_matrix_reminder_bot: False
+import_matrix_webhook: False
 
 matrix_venv_python_virtualenv: env
 matrix_venv_python_requirements: requirements.txt

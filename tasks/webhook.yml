@@ -1,0 +1,31 @@
+- name: webhook clone repo
+  git:
+    repo: https://gitlab.phys.ethz.ch/isgphys/webhook-to-matrix-hookshot.git
+    dest: /opt/webhook/git
+    update: False
+  become: yes
+  become_user: webhook
+
+# TODO: create config, remove from git
+
+- name: webhook create venv
+  include_tasks:
+    file: venv_python.yml
+  vars:
+    base_path: /opt/webhook/git
+    user: webhook
+
+- name: webhook create systemd unit
+  template:
+    src: webhook/systemd.service.j2
+    dest: /etc/systemd/system/webhook.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: webhook enable and start systemd unit
+  systemd:
+    name: webhook.service
+    daemon_reload: True
+    enabled: True
+    state: started
