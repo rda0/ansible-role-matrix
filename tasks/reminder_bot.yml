@@ -1,11 +1,11 @@
-- name: install dependencies
+- name: reminder_bot install dependencies
   package:
     name:
       - libolm-dev
       - libolm3
     default_release: "{{ 'buster-backports' if ansible_distribution_release == 'buster' else ansible_distribution_release }}"
 
-- name: create directories
+- name: reminder_bot create directories
   file:
     path: '{{ item.path }}'
     state: directory
@@ -25,7 +25,7 @@
       group: reminder-bot
       mode: '0750'
 
-- name: create venv
+- name: reminder_bot create venv
   include_tasks:
     file: venv_python.yml
   vars:
@@ -36,7 +36,7 @@
 
 # TODO: create database
 
-- name: create config
+- name: reminder_bot create config
   template:
     src: reminder_bot/config.yaml.j2
     dest: /etc/opt/reminder-bot/config.yaml
@@ -44,7 +44,7 @@
     group: reminder-bot
     mode: '0640'
 
-- name: create systemd service unit
+- name: reminder_bot create systemd service unit
   template:
     src: reminder_bot/systemd.service.j2
     dest: /etc/systemd/system/reminder-bot.service
@@ -52,7 +52,7 @@
     group: root
     mode: '0644'
 
-- name: enable and start systemd service unit
+- name: reminder_bot enable and start systemd service unit
   systemd:
     name: reminder-bot.service
     enabled: True

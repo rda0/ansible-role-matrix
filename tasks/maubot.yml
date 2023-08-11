@@ -1,4 +1,4 @@
-- name: create directories
+- name: maubot create directories
   file:
     path: '{{ item.path }}'
     state: directory
@@ -13,7 +13,7 @@
       group: maubot
       mode: '0775'
 
-- name: create venv
+- name: maubot create venv
   include_tasks:
     file: venv_python.yml
   vars:
@@ -21,21 +21,21 @@
     packages:
       - maubot
 
-- name: clone maubot repo
+- name: maubot clone repo
   git:
     repo: https://github.com/maubot/maubot.git
     dest: /opt/maubot/git
     update: False
     #version: ''
 
-- name: set fact _matrix_maubot_instances
+- name: maubot set fact _matrix_maubot_instances
   set_fact:
     _matrix_maubot_instances: "{{ _matrix_maubot_instances + [_matrix_maubot_instances_defaults | combine(item, recursive=True)] }}"
   loop: '{{ matrix_maubot_instances }}'
   loop_control:
     label: '{{ item.name }}'
 
-- name: include maubot instance
+- name: maubot include instance
   include_tasks: maubot_instance.yml
   loop: "{{ _matrix_maubot_instances }}"
   loop_control:

@@ -1,8 +1,8 @@
-- name: install ma1sd
+- name: ma1sd install package
   package:
     name: ma1sd
 
-- name: create config
+- name: ma1sd create config
   template:
     src: ma1sd/config.yaml.j2
     dest: /etc/ma1sd/ma1sd.yaml
@@ -10,7 +10,7 @@
     group: ma1sd
     mode: '0640'
 
-- name: create systemd service override directory
+- name: ma1sd create systemd service override directory
   file:
     path: /etc/systemd/system/ma1sd.service.d
     state: directory
@@ -18,7 +18,7 @@
     group: root
     mode: '0755'
 
-- name: override systemd service
+- name: ma1sd override systemd service
   template:
     src: ma1sd/systemd.service.override.conf.j2
     dest: /etc/systemd/system/ma1sd.service.d/override.conf
@@ -26,7 +26,7 @@
     group: root
     mode: '0644'
 
-- name: enable and start systemd service unit
+- name: ma1sd enable and start systemd service unit
   systemd:
     name: ma1sd
     enabled: True

@@ -1,9 +1,9 @@
-- name: create groups
+- name: users create groups
   group:
     name: '{{ item.name }}'
   loop: '{{ matrix_groups }}'
 
-- name: create system users
+- name: users create system users
   user:
     name: '{{ item.name }}'
     home: '{{ item.home }}'
@@ -13,7 +13,7 @@
     groups: "{{ item.groups | default('') }}"
   loop: '{{ matrix_system_users }}'
 
-- name: create home directories
+- name: users create home directories
   file:
     path: '{{ item.home }}'
     state: directory

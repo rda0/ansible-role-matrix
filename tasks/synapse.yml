@@ -1,4 +1,4 @@
-- name: install synapse dependencies
+- name: synapse install dependencies
   package:
     name:
       - redis-server
@@ -13,7 +13,7 @@
       - libxml2-dev
       - libjemalloc2
 
-- name: create venv
+- name: synapse create venv
   include_tasks:
     file: venv_python.yml
   vars:
@@ -26,7 +26,7 @@
       - lxml
       - netaddr
 
-- name: clone matrix-synapse-rest-password-provider repo
+- name: synapse clone matrix-synapse-rest-password-provider repo
   git:
     repo: '{{ matrix_synapse_rest_auth_provider_git.repo }}'
     dest: /opt/matrix-synapse-rest-password-provider
@@ -34,7 +34,7 @@
     version: '{{ matrix_synapse_rest_auth_provider_git.commit | default(matrix_synapse_rest_auth_provider_git.branch) }}'
   when: matrix_synapse_rest_auth_provider_install
 
-- name: deploy rest-auth-provider plugin
+- name: synapse deploy rest-auth-provider plugin
   copy:
     src: /opt/matrix-synapse-rest-password-provider/rest_auth_provider.py
     dest: /opt/synapse/env/lib/python{{ ansible_python.version.major }}.{{ ansible_python.version.minor }}/site-packages/rest_auth_provider.py
@@ -44,7 +44,7 @@
     mode: '0644'
   when: matrix_synapse_rest_auth_provider_install
 
-- name: create directories
+- name: synapse create directories
   file:
     path: '{{ item }}'
     state: directory
@@ -56,7 +56,7 @@
     - /var/opt/synapse
     - /var/log/synapse
 
-- name: create logrotate cronjob
+- name: synapse create logrotate cronjob
   template:
     src: synapse/logrotate.j2
     dest: /etc/cron.daily/synapse-logs
@@ -64,7 +64,7 @@
     group: root
     mode: '0755'
 
-- name: set fact _matrix_synapse_instances
+- name: synapse set fact _matrix_synapse_instances
   set_fact:
     _matrix_synapse_instances: "{{ _matrix_synapse_instances + [_matrix_synapse_instances_defaults | combine(item, recursive=True)] }}"
   loop: '{{ matrix_synapse_instances }}'
@@ -72,7 +72,7 @@
     label: '{{ item.name }}'
   tags: matrix_synadm
 
-- name: include synapse instance
+- name: synapse include instance
   include_tasks: synapse_instance.yml
   loop: "{{ _matrix_synapse_instances }}"
   loop_control:

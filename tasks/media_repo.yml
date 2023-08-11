@@ -1,4 +1,4 @@
-- name: create directories
+- name: media_repo create directories
   file:
     path: '{{ item.path }}'
     state: directory
@@ -21,13 +21,13 @@
     - path: /var/opt/media-repo/local_media
     - path: /var/opt/media-repo/archives
 
-- name: install dependecies
+- name: media_repo install dependecies
   package:
     name:
       - imagemagick
       - ffmpeg
 
-- name: create main config
+- name: media_repo create main config
   template:
     src: media_repo/00-main.yaml.j2
     dest: /etc/opt/media-repo/00-main.yaml
@@ -35,7 +35,7 @@
     group: media-repo
     mode: '0640'
 
-- name: create domain configs
+- name: media_repo create domain configs
   template:
     src: media_repo/domain.yaml.j2
     dest: '/etc/opt/media-repo/1{{ index }}-domain-{{ instance.name }}.yaml'
@@ -48,7 +48,7 @@
     label: '1{{ index }}-domain-{{ instance.name }}'
     index_var: index
 
-- name: install media repo binary
+- name: media_repo install binary
   get_url:
     url: 'https://github.com/turt2live/matrix-media-repo/releases/download/{{ matrix_media_repo_version }}/media_repo-linux-x64'
     dest: '/opt/media-repo/bin/media_repo-{{ matrix_media_repo_version }}'
@@ -56,7 +56,7 @@
     group: root
     mode: '0755'
 
-- name: symlink media repo version binary
+- name: media_repo symlink version binary
   file:
     src: '/opt/media-repo/bin/media_repo-{{ matrix_media_repo_version }}'
     dest: /opt/media-repo/bin/media_repo
@@ -65,7 +65,7 @@
     group: root
   ignore_errors: '{{ ansible_check_mode }}'
 
-- name: create systemd unit
+- name: media_repo create systemd unit
   template:
     src: media_repo/systemd.service.j2
     dest: /etc/systemd/system/media-repo.service
@@ -73,7 +73,7 @@
     group: root
     mode: '0644'
 
-- name: enable and start systemd unit
+- name: media_repo enable and start systemd unit
   systemd:
     name: media-repo.service
     daemon_reload: True
