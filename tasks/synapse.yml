@@ -70,6 +70,7 @@
   loop: '{{ matrix_synapse_instances }}'
   loop_control:
     label: '{{ item.name }}'
+  tags: matrix_synadm
 
 - name: include synapse instance
   include_tasks: synapse_instance.yml

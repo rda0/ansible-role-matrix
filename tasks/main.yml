@@ -18,6 +18,11 @@
       tags: matrix_synapse
       when: import_matrix_synapse
 
+    - name: import tasks from synadm.yml
+      import_tasks: synadm.yml
+      tags: matrix_synadm
+      when: import_matrix_synadm
+
     - name: import tasks from media_repo.yml
       import_tasks: media_repo.yml
       tags: matrix_media_repo

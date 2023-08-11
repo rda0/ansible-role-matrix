@@ -2,6 +2,7 @@ role_matrix: True
 import_matrix_dependencies: True
 import_matrix_users: True
 import_matrix_synapse: True
+import_matrix_synadm: True
 import_matrix_media_repo: True
 import_matrix_ma1sd: False
 import_matrix_maubot: False
@@ -47,9 +48,13 @@ vault_matrix_reminder_bot: {}
 # private set_fact variable defaults (do not use in inventory)
 _matrix_synapse_instances: []
 _matrix_synapse_instances_defaults:
+  admin_username_localpart: admin
+  #admin_password: ''  #unused for now, default: loaded from vault_matrix_synapse_instances
+  #admin_access_token: ''  #required by synadm, default: loaded from vault_matrix_synapse_instances
   log_level: INFO
   modules: []
   public_baseurl: ''
+  synadm: False
   enabled: True
   jemalloc: False
   presence: True

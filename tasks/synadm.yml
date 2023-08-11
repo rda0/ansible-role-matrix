@@ -1,0 +1,74 @@
+- name: synadm create directories
+  file:
+    path: '{{ item.path }}'
+    state: directory
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0755') }}"
+  loop:
+    - path: /opt/synadm
+    - path: /root/.config
+      mode: '0700'
+    - path: /root/bin
+
+- name: synadm create instance directories
+  file:
+    path: '/root/bin/{{ instance.name }}'
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop: "{{ _matrix_synapse_instances | selectattr('synadm') | list }}"
+  loop_control:
+    loop_var: instance
+    label: "{{ instance.name }}"
+
+- name: synadm create venv
+  include_tasks:
+    file: venv_python.yml
+  vars:
+    base_path: /opt/synadm
+    packages:
+      - synadm
+
+- name: synadm link to venv
+  file:
+    src: /opt/synadm/env/bin/synadm
+    dest: /root/bin/synadm
+    state: link
+    owner: root
+    group: root
+
+- name: synadm create instance wrappers
+  template:
+    src: synadm/wrapper.py.j2
+    dest: '/root/bin/{{ instance.name }}/synadm'
+    owner: root
+    group: root
+    mode: '0755'
+  loop: "{{ _matrix_synapse_instances | selectattr('synadm') | list }}"
+  loop_control:
+    loop_var: instance
+    label: "{{ instance.name }}"
+
+- name: synadm create config
+  template:
+    src: synadm/config.yaml.j2
+    dest: '/root/.config/synadm.yaml'
+    owner: root
+    group: root
+    mode: '0600'
+  vars:
+    instance: "{{ _matrix_synapse_instances | selectattr('synadm') | list | first }}"
+
+- name: synadm create instance configs
+  template:
+    src: synadm/config.yaml.j2
+    dest: '/root/bin/{{ instance.name }}/synadm.yaml'
+    owner: root
+    group: root
+    mode: '0600'
+  loop: "{{ _matrix_synapse_instances | selectattr('synadm') | list }}"
+  loop_control:
+    loop_var: instance
+    label: "{{ instance.name }}"

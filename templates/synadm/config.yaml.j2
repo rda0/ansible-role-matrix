@@ -1,0 +1,7 @@
+admin_path: /_synapse/admin
+base_url: http://localhost:{{ instance.listeners.main }}
+format: yaml
+matrix_path: /_matrix
+timeout: 360000
+token: {{ instance.admin_access_token | default(vault_matrix_synapse_instances[instance.name].admin_access_token) }}
+user: '@{{ instance.admin_username_localpart }}:{{ instance.server_name }}'
