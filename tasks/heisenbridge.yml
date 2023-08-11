@@ -1,0 +1,21 @@
+- name: heisenbridge create venv
+  include_tasks:
+    file: venv_python.yml
+  vars:
+    base_path: /opt/heisenbridge
+    user: heisenbridge
+
+- name: heisenbridge create systemd unit
+  template:
+    src: heisenbridge/systemd.service.j2
+    dest: /etc/systemd/system/heisenbridge.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: heisenbridge enable and start systemd unit
+  systemd:
+    name: heisenbridge.service
+    daemon_reload: True
+    enabled: True
+    state: started

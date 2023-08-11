@@ -1,0 +1,17 @@
+[Unit]
+Description=heisenbridge
+After=network.target
+
+[Service]
+ExecStart=/opt/heisenbridge/env/bin/heisenbridge -c registration.yaml -l 127.0.0.1 -p 9890{% if matrix_heisenbridge.owner is defined %} -o {{ matrix_heisenbridge.owner }}{% endif %} http://127.0.0.1:8018
+WorkingDirectory=/opt/heisenbridge
+Restart=always
+RestartSec=60
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=heisenbridge
+User=heisenbridge
+Group=heisenbridge
+
+[Install]
+WantedBy=default.target

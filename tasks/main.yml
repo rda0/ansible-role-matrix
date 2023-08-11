@@ -47,3 +47,8 @@
       import_tasks: webhook.yml
       tags: matrix_webhook
       when: import_matrix_webhook
+
+    - name: import tasks from heisenbridge.yml
+      import_tasks: heisenbridge.yml
+      tags: matrix_heisenbridge
+      when: import_matrix_heisenbridge
