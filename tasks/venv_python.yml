@@ -3,6 +3,23 @@
     path: '{{ base_path }}/{{ matrix_venv_python_requirements }}'
   register: _matrix_venv_python_requirements_stat
 
+- name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} archive as _{{ matrix_venv_python_archive }}'
+  ansible.posix.synchronize:
+    src: "{{ item.path }}{{ item.trailing | default('') }}"
+    dest: "{{ item.path }}_{{ matrix_venv_python_archive }}{{ item.trailing | default('') }}"
+  delegate_to: '{{ inventory_hostname }}'
+  loop:
+    - path: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
+      trailing: '/'
+    - path: '{{ base_path }}/{{ matrix_venv_python_freeze }}'
+  when: matrix_venv_python_archive
+
+- name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} remove freeze'
+  file:
+    path: '{{ base_path }}/{{ matrix_venv_python_freeze }}'
+    state: absent
+  when: matrix_venv_python_remove_freeze
+
 - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} check if freeze already exists'
   stat:
     path: '{{ base_path }}/{{ matrix_venv_python_freeze }}'

@@ -15,6 +15,9 @@ matrix_venv_python_requirements: requirements.txt
 matrix_venv_python_freeze: freeze.txt
 matrix_venv_python_system_pkgs: False
 matrix_venv_python_reinit: False
+# specify name to archive (sync) venv and freeze as (example: python version)
+matrix_venv_python_archive: ''
+matrix_venv_python_remove_freeze: False
 
 matrix_admin_email: ''
 matrix_noreply_email: ''
