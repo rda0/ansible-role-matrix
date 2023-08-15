@@ -169,15 +169,16 @@ alias_creation_rules:
 room_list_publication_rules:
   {{ instance.room_list_publication_rules | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
-{% if 'pusher' in instance.workers | map(attribute='app') | list %}
-start_pushers: false
-{% endif %}
 {% if 'federation_sender' in instance.workers | map(attribute='app') | list %}
+# TODO: federation_sender app is deprecated, use generic_worker
 send_federation: false
 federation_sender_instances:
 {%   for worker in instance.workers | selectattr('app', 'equalto', 'federation_sender') | map(attribute='name') | list %}
   - {{ worker }}
 {%   endfor %}
+{% elif instance.federation_sender_instances %}
+federation_sender_instances:
+  {{ instance.federation_sender_instances | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
 {% if instance.workers | map(attribute='listeners') | map(attribute='replication') | list | length > 0 %}
 instance_map:
@@ -193,6 +194,10 @@ instance_map:
 {% if instance.stream_writers %}
 stream_writers:
   {{ instance.stream_writers | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+{% endif %}
+{% if 'pusher' in instance.workers | map(attribute='app') | list %}
+# TODO: pusher app is deprecated, use generic_worker
+start_pushers: false
 {% endif %}
 {% if instance.pusher_instances %}
 pusher_instances:

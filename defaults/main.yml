@@ -111,6 +111,7 @@ _matrix_synapse_instances_defaults:
   alias_creation_rules: []
   room_list_publication_rules: []
   workers: []
+  federation_sender_instances: []
   stream_writers: {}
   pusher_instances: []
   update_user_directory_from_worker: ''

@@ -90,6 +90,7 @@
         worker:
           app: generic_worker
 
+    # TODO: deprecated, to be removed (replaced by generic_worker)
     - name: 'synapse instance {{ instance.name }} create systemd federation sender worker unit'
       template:
         src: synapse/systemd.worker.service.j2
@@ -101,6 +102,7 @@
         worker:
           app: federation_sender
 
+    # TODO: deprecated, to be removed (replaced by generic_worker)
     - name: 'synapse instance {{ instance.name }} create systemd pusher worker unit'
       template:
         src: synapse/systemd.worker.service.j2
@@ -135,6 +137,7 @@
         loop_var: worker
         label: "{{ worker.name }}"
 
+    # TODO: deprecated, to be removed (replaced by generic_worker)
     - name: "synapse instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} systemd federation sender worker unit"
       systemd:
         name: 'synapse-{{ instance.name }}-worker-federation-sender@{{ instance.server_name }}.worker.{{ worker.name }}.service'
@@ -144,6 +147,7 @@
         loop_var: worker
         label: "{{ worker.name }}"
 
+    # TODO: deprecated, to be removed (replaced by generic_worker)
     - name: "synapse instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} systemd pusher worker unit"
       systemd:
         name: 'synapse-{{ instance.name }}-worker-pusher@{{ instance.server_name }}.worker.{{ worker.name }}.service'

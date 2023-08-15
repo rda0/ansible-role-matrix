@@ -9,6 +9,7 @@ Todo:
 - Restart services (+daemon_reload)
 - Add asreg
 - See `TODO` in various files
+- Remove code for deprecated unused federation_sender and pusher apps (see `TODO`)
 
 Notes:
 
