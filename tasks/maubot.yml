@@ -22,7 +22,7 @@
   vars:
     base_path: /opt/maubot
     packages:
-      - maubot
+      - 'maubot{% if matrix_maubot_version %}=={{ matrix_maubot_version }}{% endif %}'
   tags: matrix_venv_python
 
 - name: maubot clone repo

@@ -6,6 +6,8 @@
   vars:
     base_path: /opt/heisenbridge
     user: heisenbridge
+    packages:
+      - 'heisenbridge{% if matrix_heisenbridge_version %}=={{ matrix_heisenbridge_version }}{% endif %}'
   tags: matrix_venv_python
 
 - name: heisenbridge create systemd unit

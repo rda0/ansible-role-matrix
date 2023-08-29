@@ -22,10 +22,10 @@
   vars:
     base_path: /opt/synapse
     packages:
-      - matrix-synapse
+      - 'matrix-synapse{% if matrix_synapse_version %}=={{ matrix_synapse_version }}{% endif %}'
+      - 'matrix-synapse[postgres]{% if matrix_synapse_version %}=={{ matrix_synapse_version }}{% endif %}'
+      - 'matrix-synapse[redis]{% if matrix_synapse_version %}=={{ matrix_synapse_version }}{% endif %}'
       - matrix-synapse-ldap3
-      - matrix-synapse[postgres]
-      - matrix-synapse[redis]
       - lxml
       - netaddr
   tags: matrix_venv_python

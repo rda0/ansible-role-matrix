@@ -20,7 +20,7 @@
   vars:
     base_path: /opt/synadm
     packages:
-      - synadm
+      - 'synadm{% if matrix_synadm_version %}=={{ matrix_synadm_version }}{% endif %}'
   tags: matrix_venv_python
 
 - name: synadm create instance directories

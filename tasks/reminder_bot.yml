@@ -35,8 +35,8 @@
   vars:
     base_path: /opt/reminder-bot
     packages:
-      - matrix-reminder-bot
-      - matrix-reminder-bot[postgres]
+      - 'matrix-reminder-bot{% if matrix_reminder_bot_version %}=={{ matrix_reminder_bot_version }}{% endif %}'
+      - 'matrix-reminder-bot[postgres]{% if matrix_reminder_bot_version %}=={{ matrix_reminder_bot_version }}{% endif %}'
   tags: matrix_venv_python
 
 # TODO: create database

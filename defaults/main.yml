@@ -27,6 +27,7 @@ matrix_system_users: []
 matrix_groups: []
 matrix_services_enabled: True
 
+matrix_synapse_version: ''
 matrix_synapse_trusted_key_servers_default: []
 matrix_synapse_federation_domain_whitelist_default: []
 matrix_synapse_instances: []
@@ -38,6 +39,8 @@ matrix_synapse_rest_auth_provider_git:
   branch: module_api
   commit: b6bdebb
 
+matrix_synadm_version: ''
+
 matrix_media_repo_version: v1.2.13
 matrix_media_repo_instances: []
 vault_matrix_media_repo: {}
@@ -45,12 +48,15 @@ vault_matrix_media_repo: {}
 matrix_ma1sd_config: {}
 vault_matrix_ma1sd: {}
 
+matrix_maubot_version: ''
 matrix_maubot_instances: []
 vault_matrix_maubot_instances: {}
 
+matrix_reminder_bot_version: ''
 matrix_reminder_bot: {}
 vault_matrix_reminder_bot: {}
 
+matrix_heisenbridge_version: ''
 matrix_heisenbridge: {}
 
 # private set_fact variable defaults (do not use in inventory)
