@@ -43,6 +43,9 @@
     update: '{{ matrix_synapse_rest_auth_provider_git.update | bool }}'
     version: '{{ matrix_synapse_rest_auth_provider_git.commit | default(matrix_synapse_rest_auth_provider_git.branch) }}'
   when: matrix_synapse_rest_auth_provider_install
+  tags:
+    - matrix_synapse_rest_auth_provider
+    - matrix_synapse_rest_auth_provider_install
 
 - name: synapse deploy rest-auth-provider plugin
   copy:
@@ -53,6 +56,9 @@
     group: root
     mode: '0644'
   when: matrix_synapse_rest_auth_provider_install
+  tags:
+    - matrix_synapse_rest_auth_provider
+    - matrix_synapse_rest_auth_provider_deploy
 
 - name: synapse create directories
   file:
