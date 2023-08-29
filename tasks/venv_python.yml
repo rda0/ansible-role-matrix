@@ -8,6 +8,7 @@
     src: "{{ item.path }}{{ item.trailing | default('') }}"
     dest: "{{ item.path }}_{{ matrix_venv_python_archive }}{{ item.trailing | default('') }}"
   delegate_to: '{{ inventory_hostname }}'
+  no_log: True
   loop:
     - path: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
       trailing: '/'
@@ -29,6 +30,7 @@
   file:
     path: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
     state: absent
+  no_log: True
   when: matrix_venv_python_reinit
 
 - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} check if venv already exists'
