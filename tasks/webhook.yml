@@ -5,15 +5,19 @@
     update: False
   become: yes
   become_user: webhook
+  tags: matrix_venv_python
 
 # TODO: create config, remove from git
 
 - name: webhook create venv
   include_tasks:
     file: venv_python.yml
+    apply:
+      tags: matrix_venv_python
   vars:
     base_path: /opt/webhook/git
     user: webhook
+  tags: matrix_venv_python
 
 - name: webhook create systemd unit
   template:

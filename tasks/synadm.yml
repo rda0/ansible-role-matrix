@@ -10,6 +10,18 @@
     - path: /root/.config
       mode: '0700'
     - path: /root/bin
+  tags: matrix_venv_python
+
+- name: synadm create venv
+  include_tasks:
+    file: venv_python.yml
+    apply:
+      tags: matrix_venv_python
+  vars:
+    base_path: /opt/synadm
+    packages:
+      - synadm
+  tags: matrix_venv_python
 
 - name: synadm create instance directories
   file:
@@ -22,14 +34,6 @@
   loop_control:
     loop_var: instance
     label: "{{ instance.name }}"
-
-- name: synadm create venv
-  include_tasks:
-    file: venv_python.yml
-  vars:
-    base_path: /opt/synadm
-    packages:
-      - synadm
 
 - name: synadm link to venv
   file:

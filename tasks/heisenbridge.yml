@@ -1,9 +1,12 @@
 - name: heisenbridge create venv
   include_tasks:
     file: venv_python.yml
+    apply:
+      tags: matrix_venv_python
   vars:
     base_path: /opt/heisenbridge
     user: heisenbridge
+  tags: matrix_venv_python
 
 - name: heisenbridge create systemd unit
   template:

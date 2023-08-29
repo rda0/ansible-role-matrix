@@ -12,14 +12,18 @@
     - path: /etc/opt/maubot
       group: maubot
       mode: '0775'
+  tags: matrix_venv_python
 
 - name: maubot create venv
   include_tasks:
     file: venv_python.yml
+    apply:
+      tags: matrix_venv_python
   vars:
     base_path: /opt/maubot
     packages:
       - maubot
+  tags: matrix_venv_python
 
 - name: maubot clone repo
   git:

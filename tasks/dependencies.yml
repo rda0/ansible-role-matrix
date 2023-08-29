@@ -6,9 +6,11 @@
       - python3-wheel
       - python3-venv
       - rsync
+  tags: matrix_venv_python
 
 - name: dependencies install postgresql build requirements
   package:
     name:
       - libpq5
       - libpq-dev
+  tags: matrix_venv_python

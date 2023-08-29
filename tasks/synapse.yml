@@ -12,10 +12,13 @@
       - libicu-dev
       - libxml2-dev
       - libjemalloc2
+  tags: matrix_venv_python
 
 - name: synapse create venv
   include_tasks:
     file: venv_python.yml
+    apply:
+      tags: matrix_venv_python
   vars:
     base_path: /opt/synapse
     packages:
@@ -25,6 +28,7 @@
       - matrix-synapse[redis]
       - lxml
       - netaddr
+  tags: matrix_venv_python
 
 - name: synapse clone matrix-synapse-rest-password-provider repo
   git:

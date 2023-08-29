@@ -2,6 +2,7 @@
   group:
     name: '{{ item.name }}'
   loop: '{{ matrix_groups }}'
+  tags: matrix_venv_python
 
 - name: users create system users
   user:
@@ -12,6 +13,7 @@
     create_home: False
     groups: "{{ item.groups | default('') }}"
   loop: '{{ matrix_system_users }}'
+  tags: matrix_venv_python
 
 - name: users create home directories
   file:
@@ -21,5 +23,6 @@
     group: '{{ item.name }}'
     mode: "{{ item.mode | default('0750') }}"
   loop: '{{ matrix_system_users }}'
+  tags: matrix_venv_python
 
 # TODO: create postgres users
