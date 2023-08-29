@@ -10,18 +10,24 @@
     - path: /root/.config
       mode: '0700'
     - path: /root/bin
-  tags: matrix_venv_python
+  tags:
+    - matrix_venv_python
+    - matrix_venv_python_synadm
 
 - name: synadm create venv
   include_tasks:
     file: venv_python.yml
     apply:
-      tags: matrix_venv_python
+      tags:
+        - matrix_venv_python
+        - matrix_venv_python_synadm
   vars:
     base_path: /opt/synadm
     packages:
       - 'synadm{% if matrix_synadm_version %}=={{ matrix_synadm_version }}{% endif %}'
-  tags: matrix_venv_python
+  tags:
+    - matrix_venv_python
+    - matrix_venv_python_synadm
 
 - name: synadm create instance directories
   file:

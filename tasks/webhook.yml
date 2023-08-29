@@ -5,7 +5,9 @@
     update: False
   become: yes
   become_user: webhook
-  tags: matrix_venv_python
+  tags:
+    - matrix_venv_python
+    - matrix_venv_python_webhook
 
 # TODO: create config, remove from git
 
@@ -13,7 +15,9 @@
   include_tasks:
     file: venv_python.yml
     apply:
-      tags: matrix_venv_python
+      tags:
+        - matrix_venv_python
+        - matrix_venv_python_webhook
   vars:
     base_path: /opt/webhook/git
     user: webhook
