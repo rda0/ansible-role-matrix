@@ -23,9 +23,9 @@
     group: root
     mode: '0644'
 
-- name: webhook enable and start systemd unit
+- name: "webhook {{ matrix_services_enabled | ternary('enable', 'disable') }} and {{ matrix_services_enabled | ternary('start', 'stop') }} systemd unit"
   systemd:
     name: webhook.service
     daemon_reload: True
-    enabled: True
-    state: started
+    enabled: '{{ matrix_services_enabled }}'
+    state: "{{ matrix_services_enabled | ternary('started', 'stopped') }}"

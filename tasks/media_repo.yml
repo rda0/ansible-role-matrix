@@ -73,11 +73,11 @@
     group: root
     mode: '0644'
 
-- name: media_repo enable and start systemd unit
+- name: "media_repo {{ matrix_services_enabled | ternary('enable', 'disable') }} and {{ matrix_services_enabled | ternary('start', 'stop') }} systemd unit"
   systemd:
     name: media-repo.service
     daemon_reload: True
-    enabled: True
-    state: started
+    enabled: '{{ matrix_services_enabled }}'
+    state: "{{ matrix_services_enabled | ternary('started', 'stopped') }}"
 
 # TODO: add scripts in /root/bin/media

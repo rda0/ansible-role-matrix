@@ -44,7 +44,7 @@
     group: reminder-bot
     mode: '0640'
 
-- name: reminder_bot create systemd service unit
+- name: reminder_bot create systemd unit
   template:
     src: reminder_bot/systemd.service.j2
     dest: /etc/systemd/system/reminder-bot.service
@@ -52,8 +52,8 @@
     group: root
     mode: '0644'
 
-- name: reminder_bot enable and start systemd service unit
+- name: "reminder_bot {{ matrix_services_enabled | ternary('enable', 'disable') }} and {{ matrix_services_enabled | ternary('start', 'stop') }} systemd unit"
   systemd:
     name: reminder-bot.service
-    enabled: True
-    state: started
+    enabled: '{{ matrix_services_enabled }}'
+    state: "{{ matrix_services_enabled | ternary('started', 'stopped') }}"

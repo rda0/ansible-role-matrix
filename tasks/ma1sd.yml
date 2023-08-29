@@ -26,8 +26,8 @@
     group: root
     mode: '0644'
 
-- name: ma1sd enable and start systemd service unit
+- name: "ma1sd {{ matrix_services_enabled | ternary('enable', 'disable') }} and {{ matrix_services_enabled | ternary('start', 'stop') }} systemd unit"
   systemd:
     name: ma1sd
-    enabled: True
-    state: started
+    enabled: '{{ matrix_services_enabled }}'
+    state: "{{ matrix_services_enabled | ternary('started', 'stopped') }}"

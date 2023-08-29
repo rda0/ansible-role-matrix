@@ -25,6 +25,7 @@ matrix_admin_mxids: []
 matrix_client_base_url: ''
 matrix_system_users: []
 matrix_groups: []
+matrix_services_enabled: True
 
 matrix_synapse_trusted_key_servers_default: []
 matrix_synapse_federation_domain_whitelist_default: []
@@ -62,7 +63,7 @@ _matrix_synapse_instances_defaults:
   modules: []
   public_baseurl: ''
   synadm: False
-  enabled: True
+  enabled: '{{ matrix_services_enabled }}'
   jemalloc: False
   presence: True
   allow_public_rooms_over_federation: False
@@ -119,6 +120,6 @@ _matrix_synapse_instances_defaults:
 
 _matrix_maubot_instances: []
 _matrix_maubot_instances_defaults:
-  enabled: True
+  enabled: '{{ matrix_services_enabled }}'
   unshared_secret: generate
   homeservers: []

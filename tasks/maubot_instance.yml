@@ -21,7 +21,7 @@
     group: 'maubot-{{ instance.name }}'
     mode: '0600'
 
-- name: 'maubot instance {{ instance.name }} create systemd service unit'
+- name: 'maubot instance {{ instance.name }} create systemd unit'
   template:
     src: maubot/systemd.service.j2
     dest: '/etc/systemd/system/maubot-{{ instance.name }}.service'
@@ -29,7 +29,7 @@
     group: root
     mode: '0644'
 
-- name: "maubot instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} and {{ instance.name }} {{ instance.enabled | ternary('start', 'stop') }} systemd service unit"
+- name: "maubot instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} and {{ instance.enabled | ternary('start', 'stop') }} systemd unit"
   systemd:
     name: 'maubot-{{ instance.name }}.service'
     enabled: '{{ instance.enabled }}'
