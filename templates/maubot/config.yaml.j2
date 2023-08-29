@@ -61,7 +61,7 @@ homeservers:
 # to prevent normal login. Root is a special user that can't have a password and will always exist.
 admins:
     root: ''
-{% for admin in instance.admins %}
+{% for admin in instance.admins | default([]) %}
     {{ admin.name }}: {{ admin.hash }}
 {% endfor %}
 
