@@ -1,6 +1,6 @@
-- name: ma1sd install package
-  package:
-    name: ma1sd
+#- name: ma1sd install package
+#  package:
+#    name: ma1sd
 
 - name: ma1sd create config
   template:
