@@ -55,6 +55,7 @@
     owner: root
     group: root
     mode: '0755'
+  tags: matrix_media_repo_install_binary
 
 - name: media_repo symlink version binary
   file:
