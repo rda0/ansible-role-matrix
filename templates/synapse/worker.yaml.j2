@@ -5,7 +5,7 @@ worker_name: {{ worker.name }}
 worker_listeners:
 {%   if worker.listeners.main | default('') %}
   - type: http
-    bind_addresses: ['127.0.0.1']
+    bind_addresses: ['::1', '127.0.0.1']
     port: {{ worker.listeners.main }}
     tls: false
     x_forwarded: true
@@ -15,14 +15,14 @@ worker_listeners:
 {%   endif %}
 {%   if worker.listeners.replication | default('') %}
   - type: http
-    bind_addresses: ['127.0.0.1']
+    bind_addresses: ['::1', '127.0.0.1']
     port: {{ worker.listeners.replication }}
     resources:
       - names: [replication]
 {%   endif %}
 {%   if worker.listeners.metrics | default('') %}
   - type: metrics
-    bind_addresses: ['']
+    bind_addresses: ['0.0.0.0']
     port: {{ worker.listeners.metrics }}
 {%   endif %}
 {% endif %}
