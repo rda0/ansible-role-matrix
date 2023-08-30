@@ -27,6 +27,7 @@
     base_path: /opt/maubot
     packages:
       - 'maubot{% if matrix_maubot_version %}=={{ matrix_maubot_version }}{% endif %}'
+      - psycopg2
   tags:
     - matrix_venv_python
     - matrix_venv_python_maubot
