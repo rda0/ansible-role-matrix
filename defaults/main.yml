@@ -53,6 +53,7 @@ matrix_maubot_instances: []
 vault_matrix_maubot_instances: {}
 matrix_maubot_dependencies_default:
   - 'maubot{% if matrix_maubot_version %}=={{ matrix_maubot_version }}{% endif %}'
+  - 'maubot[encryption]{% if matrix_maubot_version %}=={{ matrix_maubot_version }}{% endif %}'
   - psycopg2
 matrix_maubot_dependencies_plugins: []
 

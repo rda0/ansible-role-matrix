@@ -15,8 +15,6 @@ plugin_directories:
     # Duplicate plugin IDs will be moved to the trash.
     load:
     - ./plugins
-    # The directory where old plugin versions and conflicting plugins should be moved.
-    # Set to "delete" to delete files immediately.
     trash: ./trash
     # The directory where plugin databases should be stored.
     db: ./plugins
@@ -64,8 +62,6 @@ admins:
 {% for admin in instance.admins | default([]) %}
     {{ admin.name }}: {{ admin.hash }}
 {% endfor %}
-
-# API feature switches.
 api_features:
     login: true
     plugin: true
@@ -110,3 +106,5 @@ logging:
     root:
         level: INFO
         handlers: [file]
+plugin_databases:
+    sqlite: ./plugins
