@@ -11,7 +11,7 @@ LimitNOFILE=10240
 User=maubot-{{ instance.name }}
 Group=maubot-{{ instance.name }}
 WorkingDirectory=/var/opt/maubot/{{ instance.name }}
-ExecStart=/opt/maubot/env/bin/python3 -m maubot -c /etc/opt/maubot/{{ instance.name }}.yaml -b /opt/maubot/git/maubot/example-config.yaml
+ExecStart=/opt/maubot/env/bin/python3 -m maubot -c /etc/opt/maubot/{{ instance.name }}.yaml -n
 SyslogIdentifier=maubot-{{ instance.name }}
 
 [Install]

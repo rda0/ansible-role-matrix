@@ -30,6 +30,8 @@
     - matrix_venv_python
     - matrix_venv_python_maubot
 
+# Unused by the role, may be used manually to check config changes or check
+# /opt/maubot/env/lib/python*/site-packages/maubot/example-config.yaml
 - name: maubot clone repo
   git:
     repo: https://github.com/maubot/maubot.git
