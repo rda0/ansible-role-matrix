@@ -18,21 +18,25 @@ admins:
   {{ matrix_admin_mxids | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 datastores:
   - type: file
+    id: {{ matrix_media_repo_datastore_ids.thumbnails | default('localfilestore000001') }}
     enabled: true
     forKinds: ["thumbnails"]
     opts:
       path: /var/opt/media-repo/thumbnails
   - type: file
+    id: {{ matrix_media_repo_datastore_ids.remote_media | default('localfilestore000002') }}
     enabled: true
     forKinds: ["remote_media"]
     opts:
       path: /var/opt/media-repo/remote_media
   - type: file
+    id: {{ matrix_media_repo_datastore_ids.local_media | default('localfilestore000003') }}
     enabled: true
     forKinds: ["local_media"]
     opts:
       path: /var/opt/media-repo/local_media
   - type: file
+    id: {{ matrix_media_repo_datastore_ids.archives | default('localfilestore000004') }}
     enabled: true
     forKinds: ["archives"]
     opts:
@@ -110,6 +114,8 @@ thumbnails:
     - "image/gif"
     - "image/heif"
     - "image/webp"
+    - "image/bmp"
+    - "image/tiff"
     - "image/svg+xml" # Be sure to have ImageMagick installed to thumbnail SVG files
     - "audio/mpeg"
     - "audio/ogg"

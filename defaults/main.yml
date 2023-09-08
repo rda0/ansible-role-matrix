@@ -41,9 +41,10 @@ matrix_synapse_rest_auth_provider_git:
 
 matrix_synadm_version: ''
 
-matrix_media_repo_version: v1.2.13
+matrix_media_repo_version: v1.3.0
 matrix_media_repo_instances: []
 vault_matrix_media_repo: {}
+matrix_media_repo_datastore_ids: {}
 
 matrix_ma1sd_config: {}
 vault_matrix_ma1sd: {}
