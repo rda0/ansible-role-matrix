@@ -64,7 +64,7 @@ loggers:
 
     twisted:
         # We send the twisted logging directly to the file handler,
-        # to work around https://github.com/element-hq/synapse/issues/3471
+        # to work around https://github.com/matrix-org/synapse/issues/3471
         # when using "buffer" logger. Use "console" to log to stderr instead.
         handlers: [file]
         propagate: false
