@@ -144,7 +144,7 @@ timeouts:
   clientServerTimeoutSeconds: 30
 metrics:
   enabled: true
-  bindAddress: "127.0.0.1"
+  bindAddress: "{{ matrix_media_repo_metrics_bind_address }}"
   port: 9000
 redis:
   # warning: enabling needs cache config (see docs), which may interfere with synapse redis
