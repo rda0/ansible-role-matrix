@@ -20,6 +20,5 @@
     name:
       - libolm-dev
       - libolm3
-    default_release: "{{ 'buster-backports' if ansible_distribution_release == 'buster' else ansible_distribution_release }}"
   tags:
     - matrix_venv_python
