@@ -12,6 +12,9 @@
       mode: '0755'
     - path: /etc/opt/media-repo
       owner: root
+    - path: /etc/opt/media-repo/key
+      owner: root
+      mode: '0750'
     - path: /var/log/media-repo
       owner: root
       mode: '0770'
@@ -39,6 +42,19 @@
   template:
     src: media_repo/domain.yaml.j2
     dest: '/etc/opt/media-repo/1{{ index }}-domain-{{ instance.name }}.yaml'
+    owner: root
+    group: media-repo
+    mode: '0640'
+  loop: '{{ matrix_media_repo_instances }}'
+  loop_control:
+    loop_var: instance
+    label: '1{{ index }}-domain-{{ instance.name }}'
+    index_var: index
+
+- name: 'media_repo create domain signing key'
+  template:
+    src: media_repo/signing.key.j2
+    dest: '/etc/opt/media-repo/key/1{{ index }}-domain-{{ instance.name }}.signing.key'
     owner: root
     group: media-repo
     mode: '0640'

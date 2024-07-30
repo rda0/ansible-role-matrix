@@ -132,6 +132,11 @@ rateLimit:
   enabled: true
   requestsPerSecond: 1
   burst: 10
+  buckets:
+    downloads:
+      capacityBytes: 524288000 # 500mb default
+      drainBytesPerMinute: 5242880 # 5mb default
+      overflowLimitBytes: 104857600 # 100mb default (the same as the default remote download maxBytes)
 identicons:
   enabled: true
 quarantine:

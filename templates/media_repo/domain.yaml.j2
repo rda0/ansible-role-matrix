@@ -1,5 +1,6 @@
 homeserver: {{ instance.homeserver }}
 csApi: "{{ instance.cs_api }}"
+signingKeyPath: "/etc/opt/media-repo/key/1{{ index }}-domain-{{ instance.name }}.signing.key"
 backoffAt: 10
 adminApiKind: "synapse"
 {% if instance.uploads | default({}) %}

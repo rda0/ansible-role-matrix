@@ -10,6 +10,7 @@ Todo:
 - Add asreg
 - See `TODO` in various files
 - Remove code for deprecated unused federation_sender and pusher apps (see `TODO`)
+- Generate MMR signing key and merge with homeserver key: https://docs.t2bot.io/matrix-media-repo/v1.3.5/installation/signing-key/
 
 Notes:
 
