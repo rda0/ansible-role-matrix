@@ -32,6 +32,7 @@
       - matrix-synapse-ldap3
       - lxml
       - netaddr
+      - git+https://github.com/t2bot/synapse-simple-antispam#egg=synapse-simple-antispam
   tags:
     - matrix_venv_python
     - matrix_venv_python_synapse
