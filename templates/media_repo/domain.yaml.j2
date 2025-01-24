@@ -3,6 +3,9 @@ csApi: "{{ instance.cs_api }}"
 signingKeyPath: "/etc/opt/media-repo/key/1{{ index }}-domain-{{ instance.name }}.signing.key"
 backoffAt: 10
 adminApiKind: "synapse"
+accessTokens:
+  maxCacheTimeSeconds: {{ instance.access_tokens.max_cache_time_seconds | default(43200) }}
+  useLocalAppserviceConfig: false
 {% if instance.uploads | default({}) %}
 uploads:
 {%   if instance.uploads.max_mb | default(None) or instance.uploads.max_mb | default(None) == 0 %}
