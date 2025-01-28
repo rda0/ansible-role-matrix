@@ -213,3 +213,7 @@ redis:
 worker_replication_secret: "{{ instance.worker_replication_secret }}"
 {%   endif %}
 {% endif %}
+{% if instance.auto_accept_invites %}
+auto_accept_invites:
+  {{ instance.auto_accept_invites | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
+{% endif %}
