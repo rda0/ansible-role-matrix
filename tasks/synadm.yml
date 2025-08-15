@@ -82,3 +82,8 @@
   loop_control:
     loop_var: instance
     label: "{{ instance.name }}"
+
+- name: synadm install optional packages
+  package:
+    name:
+      - yq
