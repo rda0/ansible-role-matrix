@@ -51,7 +51,7 @@
 - name: synapse deploy rest-auth-provider plugin
   copy:
     src: /opt/matrix-synapse-rest-password-provider/rest_auth_provider.py
-    dest: /opt/synapse/env/lib/python{{ ansible_python.version.major }}.{{ ansible_python.version.minor }}/site-packages/rest_auth_provider.py
+    dest: /opt/synapse/env/lib/python{{ ansible_facts.python.version.major }}.{{ ansible_facts.python.version.minor }}/site-packages/rest_auth_provider.py
     remote_src: True
     owner: root
     group: root
