@@ -42,46 +42,46 @@
   when: not _matrix_venv_python_virtualenv_stat.stat.exists
   block:
 
-  - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} initialize venv (pip, setuptools, wheel)'
-    pip:
-      name:
-        - pip
-        - setuptools
-        - wheel
-      state: latest  # noqa package-latest
-      virtualenv: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
-      virtualenv_command: /usr/bin/python3 -m venv
-      virtualenv_site_packages: "{{ matrix_venv_python_system_pkgs | ternary('yes', 'no') }}"
-      extra_args: --no-cache-dir
-    become: yes
-    become_user: "{{ user | default('root') }}"
-    register: _matrix_venv_python_initialize
+    - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} initialize venv (pip, setuptools, wheel)'
+      pip:
+        name:
+          - pip
+          - setuptools
+          - wheel
+        state: latest  # noqa package-latest
+        virtualenv: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
+        virtualenv_command: /usr/bin/python3 -m venv
+        virtualenv_site_packages: "{{ matrix_venv_python_system_pkgs | ternary('yes', 'no') }}"
+        extra_args: --no-cache-dir
+      become: yes
+      become_user: "{{ user | default('root') }}"
+      register: _matrix_venv_python_initialize
 
-  - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} install from freeze if exists or else from requirements'
-    pip:
-      requirements: '{{ base_path }}/{{ matrix_venv_python_freeze if _matrix_venv_python_freeze_stat.stat.exists else matrix_venv_python_requirements }}'
-      virtualenv: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
-      virtualenv_command: /usr/bin/python3 -m venv
-      extra_args: --no-cache-dir
-    become: yes
-    become_user: "{{ user | default('root') }}"
-    register: _matrix_venv_python_install_requirements
-    when: >
-      _matrix_venv_python_initialize.changed and
-      (_matrix_venv_python_requirements_stat.stat.exists or _matrix_venv_python_freeze_stat.stat.exists)
-    ignore_errors: True
+    - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} install from freeze if exists or else from requirements'
+      pip:
+        requirements: '{{ base_path }}/{{ matrix_venv_python_freeze if _matrix_venv_python_freeze_stat.stat.exists else matrix_venv_python_requirements }}'
+        virtualenv: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
+        virtualenv_command: /usr/bin/python3 -m venv
+        extra_args: --no-cache-dir
+      become: yes
+      become_user: "{{ user | default('root') }}"
+      register: _matrix_venv_python_install_requirements
+      when: >
+        _matrix_venv_python_initialize.changed and
+        (_matrix_venv_python_requirements_stat.stat.exists or _matrix_venv_python_freeze_stat.stat.exists)
+      ignore_errors: True
 
-  # TODO: Bug: always changed in check mode: https://github.com/ansible/ansible/issues/62826
-  - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} install packages (bug: always changed in check mode)'
-    pip:
-      name: '{{ packages | default([]) }}'
-      virtualenv: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
-      virtualenv_command: /usr/bin/python3 -m venv
-      extra_args: --no-cache-dir
-    become: yes
-    become_user: "{{ user | default('root') }}"
-    register: _matrix_venv_python_install_packages
-    when: packages | default([]) != []
+    # TODO: Bug: always changed in check mode: https://github.com/ansible/ansible/issues/62826
+    - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} install packages (bug: always changed in check mode)'
+      pip:
+        name: '{{ packages | default([]) }}'
+        virtualenv: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
+        virtualenv_command: /usr/bin/python3 -m venv
+        extra_args: --no-cache-dir
+      become: yes
+      become_user: "{{ user | default('root') }}"
+      register: _matrix_venv_python_install_packages
+      when: packages | default([]) != []
 
 - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} generate venv freeze file'
   shell: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}/bin/pip --no-cache-dir freeze --local > {{ base_path }}/{{ matrix_venv_python_freeze }}'
