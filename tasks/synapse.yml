@@ -41,7 +41,7 @@
   git:
     repo: '{{ matrix_synapse_rest_auth_provider_git.repo }}'
     dest: /opt/matrix-synapse-rest-password-provider
-    update: '{{ matrix_synapse_rest_auth_provider_git.update | bool }}'
+    update: "{{ matrix_synapse_rest_auth_provider_git['update'] | bool }}"
     version: '{{ matrix_synapse_rest_auth_provider_git.commit | default(matrix_synapse_rest_auth_provider_git.branch) }}'
   when: matrix_synapse_rest_auth_provider_install
   tags:
