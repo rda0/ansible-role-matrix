@@ -13,7 +13,7 @@
     - path: '{{ base_path }}/{{ matrix_venv_python_virtualenv }}'
       trailing: '/'
     - path: '{{ base_path }}/{{ matrix_venv_python_freeze }}'
-  when: matrix_venv_python_archive
+  when: matrix_venv_python_archive | length > 0
 
 - name: 'venv python {{ base_path }}/{{ matrix_venv_python_virtualenv }} remove freeze'
   file:

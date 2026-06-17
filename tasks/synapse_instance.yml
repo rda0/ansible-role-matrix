@@ -68,7 +68,7 @@
     mode: '0644'
 
 - name: when-block
-  when: instance.workers
+  when: instance.workers | length > 0
   block:
 
     - name: 'synapse instance {{ instance.name }} create systemd target unit'
@@ -120,7 +120,7 @@
     enabled: '{{ instance.enabled }}'
 
 - name: when-block
-  when: instance.workers
+  when: instance.workers | length > 0
   block:
 
     - name: "synapse instance {{ instance.name }} {{ instance.enabled | ternary('enable', 'disable') }} systemd target unit"
@@ -161,13 +161,13 @@
   systemd:
     name: 'synapse-{{ instance.name }}.service'
     state: "{{ instance.enabled | ternary('started', 'stopped') }}"
-  when: not instance.workers
+  when: instance.workers | length == 0
 
 - name: "synapse instance {{ instance.name }} {{ instance.enabled | ternary('start', 'stop') }} systemd target unit"
   systemd:
     name: 'synapse-{{ instance.name }}.target'
     state: "{{ instance.enabled | ternary('started', 'stopped') }}"
-  when: instance.workers
+  when: instance.workers | length > 0
 
 # TODO: create initial admin user
 # TODO: create local users
