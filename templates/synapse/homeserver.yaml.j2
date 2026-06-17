@@ -180,12 +180,12 @@ federation_sender_instances:
 federation_sender_instances:
   {{ instance.federation_sender_instances | to_yaml(indent=2, sort_keys=False, default_flow_style=False) | indent(width=2) | trim }}
 {% endif %}
-{% if instance.workers | map(attribute='listeners') | map(attribute='replication') | list | length > 0 %}
+{% if instance.workers | selectattr('listeners.replication', 'defined') | selectattr('listeners.replication') | list | length > 0 %}
 instance_map:
   main:
     host: 127.0.0.1
     port: {{ instance.listeners.replication }}
-{%   for worker in instance.workers | selectattr('listeners', 'contains', 'replication') | list %}
+{%   for worker in instance.workers | selectattr('listeners.replication', 'defined') | selectattr('listeners.replication') | list %}
   {{ worker.name }}:
     host: 127.0.0.1
     port: {{ worker.listeners.replication }}
